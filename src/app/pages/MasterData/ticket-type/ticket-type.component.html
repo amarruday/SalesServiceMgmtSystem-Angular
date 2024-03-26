@@ -1,0 +1,136 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Ticket Types</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addTicketTypeModal">
+            Add
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+            <!-- <table class="table table-bordered"> -->
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 5%;">#</th>
+                  <th scope="col" style="width: 75%;">Ticket Type</th>
+                  <th scope="col" style="width: 10%;">Status</th>
+                  <th scope="col" style="width: 10%;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!ticketTypesList">
+                  <td colspan="4" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let ticketType of ticketTypesList; let indexOfelement=index;">
+                  <th scope="row">{{indexOfelement + 1}}</th>
+                  <td>{{ticketType.ticketType}}</td>
+                  <td *ngIf="ticketType.status === 'Active'"><span class="badge bg-green">{{ticketType.status}}</span></td>
+                  <td *ngIf="ticketType.status === 'Inactive'"><span class="badge bg-red">{{ticketType.status}}</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-info" (click)="getTicketType(ticketType.ticketTypeId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Action Type Models Start -->
+<div class="modal fade" id="addTicketTypeModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Ticket Type</h4>
+      </div>
+      <form name="addTicketTypeForm" #addTicketTypeForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Ticket Type</label>
+                <input type="text" id="ticketTypeAddTicketType" class="form-control" placeholder="Ticket Type"
+                  [(ngModel)]="addTicketTypeBean.ticketType" name="ticketType" required #ticketType="ngModel">
+
+                <div *ngIf="ticketType.invalid && (ticketType.dirty || ticketType.touched)">
+                  <label class="error" for="ticketType" *ngIf="ticketType.errors?.['required']">Please enter ticket type.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addTicketTypeForm.invalid" (click)="addTicketTypeFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Action Tye Models End-->
+
+<!-- Edit Action Type Models Start -->
+<div class="modal fade" id="editTicketTypeModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Ticket Type</h4>
+      </div>
+      <form name="editTicketTypeForm" #editTicketTypeForm="ngForm">
+        
+        <div class="modal-body">          
+          <input type="hidden" id="ticketTypeIdEditTicketType" [(ngModel)]="editTicketTypeBean.ticketTypeId" name="ticketTypeId">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Ticket Type</label>
+                <input type="text" id="ticktTypeEditTicket" class="form-control" placeholder="Ticket Type" [(ngModel)]="editTicketTypeBean.ticketType" name="ticketType" required #ticketType="ngModel">
+                <div *ngIf="ticketType.invalid && (ticketType.dirty || ticketType.touched)">
+                  <label class="error" for="ticketType" *ngIf="ticketType.errors?.['required']">Please enter ticket type.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Status</label>
+                <select id="statusEditTicketType" class="form-control" [(ngModel)]="editTicketTypeBean.status" name="status" #status="ngModel">
+                  <option value='Active'>Active</option>
+                  <option value='Inactive'>Inactive</option>
+                </select>
+              </div>  
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="updateTicketType()" [disabled]="editTicketTypeForm.invalid">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Edit Action Tye Models End-->

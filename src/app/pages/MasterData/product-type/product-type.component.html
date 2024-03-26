@@ -1,0 +1,195 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Product Types</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addProductTypeModel">
+            Add
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Product Type</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Ticket Prefix</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="center">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!productTypeList">
+                  <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let prodType of productTypeList; let indexOfelement=index;">
+                  <th scope="row" class="center">{{indexOfelement + 1}}</th>
+                  <td>{{prodType.productName}}</td>
+                  <td>{{prodType.productCatagory.productCatagoryName}}</td>
+                  <td>{{prodType.ticketPrefix}}</td>
+                  <td *ngIf="prodType.status === true"><span class="badge bg-green">Active</span></td>
+                  <td *ngIf="prodType.status === false"><span class="badge bg-red">Inactive</span></td>
+                  <td class="center">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getProductTypeByProductTypeId(prodType.productTypeId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                    <!-- <button type="button" class="btn btn-sm btn-danger" style="margin: 0px 0px 0px 10px;"><i class="fa fa-fw fa-trash"></i> Delete</button> -->
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Product Type Models Start -->
+<div class="modal fade" id="addProductTypeModel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Product Type</h4>
+      </div>
+      <form name="addProductTypeForm" #addProductTypeForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            <div class="col-sm-12">
+              
+              <div class="form-group required">
+                <label class='control-label'>Product Catagory</label>
+                <select class="form-control" style="width: 100%;" id="productCatagoryAddProdType" 
+                name="productCatagoryId" nonZeroValue="0" 
+                [(ngModel)]="addProductType.productCatagoryId" #productCatagoryId="ngModel">
+
+                  <option value='0' selected>Select Product Catagory</option>
+                  <option *ngFor="let pc of prodCatagoryList" [value]="pc.productCatagoryId">
+                    {{pc.productCatagoryName}}
+                  </option>
+                </select>
+
+                <div *ngIf="productCatagoryId.invalid && (productCatagoryId.dirty || productCatagoryId.touched)">
+                  <label class="error" for="productCatagoryId" *ngIf="productCatagoryId.errors?.['nonZeroValue']">Please Select product catagory.</label>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class='control-label'>Product Type</label>
+                <input type="text" class="form-control" placeholder="Product Type" id="productTypeAddProdType" 
+                name="productName" [(ngModel)]="addProductType.productName" #productName="ngModel" required>
+
+                <div *ngIf="productName.invalid && (productName.dirty || productName.touched)">
+                  <label class="error" for="productName" *ngIf="productName.errors?.['required']">Please enter product type.</label>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class='control-label'>Ticket Prefix</label>
+                <input type="text" class="form-control" placeholder="Ticket Prefix" id="ticketPrefix" 
+                name="ticketPrefix" [(ngModel)]="addProductType.ticketPrefix" #ticketPrefix="ngModel" required>
+
+                <div *ngIf="ticketPrefix.invalid && (ticketPrefix.dirty || ticketPrefix.touched)">
+                  <label class="error" for="ticketPrefix" *ngIf="ticketPrefix.errors?.['required']">Please enter ticket prefix.</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addProductTypeForm.invalid" (click)="addProductTypeFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Action Tye Models End-->
+
+<!-- Edit Product Type Models Start -->
+<div class="modal fade" id="editProductTypeModel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Product Type</h4>
+      </div>
+      <form name="editProductTypeForm" #editProductTypeForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            <div class="col-sm-12">
+              <input type="hidden" name="productTypeId" [(ngModel)]="editProductTypeModal.productTypeId">
+              <div class="form-group required">
+                <label class='control-label'>Product Catagory</label>
+                <select class="form-control" style="width: 100%;" id="productCatagoryEditProdType" 
+                name="productCatagoryId" nonZeroValue="0" 
+                [(ngModel)]="editProductTypeModal.productCatagoryId" #productCatagoryId="ngModel">
+
+                  <option value='0' selected>Select Product Catagory</option>
+                  <option *ngFor="let pc of prodCatagoryList" [value]="pc.productCatagoryId">
+                    {{pc.productCatagoryName}}
+                  </option>
+                </select>
+
+                <div *ngIf="productCatagoryId.invalid && (productCatagoryId.dirty || productCatagoryId.touched)">
+                  <label class="error" for="productCatagoryId" *ngIf="productCatagoryId.errors?.['nonZeroValue']">Please Select product catagory.</label>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class='control-label'>Product Type</label>
+                <input type="text" class="form-control" placeholder="Product Type" id="productTypeEditProdType" 
+                name="productName" [(ngModel)]="editProductTypeModal.productName" #productName="ngModel" required>
+
+                <div *ngIf="productName.invalid && (productName.dirty || productName.touched)">
+                  <label class="error" for="productName" *ngIf="productName.errors?.['required']">Please enter product type.</label>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class='control-label'>Ticket Prefix</label>
+                <input type="text" class="form-control" placeholder="Ticket Prefix" id="ticketPrefixEditTicket" 
+                name="ticketPrefix" [(ngModel)]="editProductTypeModal.ticketPrefix" #ticketPrefix="ngModel" required>
+
+                <div *ngIf="ticketPrefix.invalid && (ticketPrefix.dirty || ticketPrefix.touched)">
+                  <label class="error" for="ticketPrefix" *ngIf="ticketPrefix.errors?.['required']">Please enter ticket prefix.</label>
+                </div>
+              </div>
+
+              <div class="form-group required">
+                <label class='control-label'>Status</label>
+                <select id="statusEditProductType" class="form-control" [(ngModel)]="editProductTypeModal.status" name="status">
+                  <option value='true'>Active</option>
+                  <option value='false'>Inactive</option>
+                </select>
+              </div> 
+
+            </div>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="editProductTypeForm.invalid" (click)="editProductTypeFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Edit Product Tye Models End-->
+

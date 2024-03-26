@@ -1,0 +1,259 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manager Customers</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addCustomerModal">
+            Add
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Customer Name</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Mobile Number</th>                  
+                  <th scope="col">Customer Type</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="text-align: center; width: 10%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!customerList">
+                  <td colspan="8" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let customer of customerList | paginate : {
+                      itemsPerPage: 10,
+                      currentPage: page,
+                      totalItems: totalItems
+                    };
+                  let indexOfElements = index;">
+                  <th scope="row" class="center">{{(page-1) * 10 + indexOfElements + 1}}</th>
+                  <td>{{customer.customerName}}</td>
+                  <td>{{customer.address}}</td>
+                  <td>{{customer.customerEmail}}</td>
+                  <td>{{customer.mobileNumber}}</td>
+                  <td *ngIf="customer.customerType === 'Customer'"><span class="customer">{{customer.customerType}}</span></td>
+                  <td *ngIf="customer.customerType === 'Prospect'"><span class="prospect">{{customer.customerType}}</span></td>
+                  <td *ngIf="customer.status === 'Active'"><span class="badge bg-green">Active</span></td>
+                  <td *ngIf="customer.status === 'Inactive'"><span class="badge bg-red">Inactive</span></td>
+                  <td style="text-align: center;">
+                    <button type="button" class="btn btn-sm btn-info" (click)="viewCustomerDetailsOnEditModal(customer.customerId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="paginationDiv">
+              <pagination-controls class="pagination my-pagination" (pageChange)="changePage($event)"
+                previousLabel="Prev" nextLabel="Next"></pagination-controls>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Customer Models Start -->
+<div class="modal fade" id="addCustomerModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Customer</h4>
+      </div>
+      
+      <form name="addCustomerForm" #addCustomerForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Name</label>
+                <input type="text" id="customerNameAddCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="addCustomerModal.customerName" name="customerName" required #customerName="ngModel">
+
+                <div *ngIf="customerName.invalid && (customerName.dirty || customerName.touched)">
+                  <label class="error" for="customerName" *ngIf="customerName.errors?.['required']">Please enter customer name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Email</label>
+                <input type="email" id="customerEmailAddCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="addCustomerModal.customerEmail" name="customerEmail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #customerEmail="ngModel">
+
+                <div *ngIf="customerEmail.invalid && (customerEmail.dirty || customerEmail.touched)">
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['required']">Please enter valid email.</label>
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['pattern']">Please enter valid email.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Mobile Number</label>
+                <input type="text" id="mobileNumberAddCustomer" class="form-control" placeholder="Mobile Number"
+                  [(ngModel)]="addCustomerModal.mobileNumber" name="mobileNumber" required minlength="10" maxlength="10" pattern="^[0-9]*$" #mobileNumber="ngModel">
+
+                <div *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['required']">Please enter mobile number.</label>
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['minlength'] || mobileNumber.errors?.['maxlength'] || mobileNumber.errors?.['pattern']">Please enter valid mobile number.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Address</label>
+                <textarea id="addressAddCustomer" class="form-control" placeholder="Address" row="3" cols="7"
+                  [(ngModel)]="addCustomerModal.address" name="address" required minlength="5" #address="ngModel"></textarea>
+
+                <div *ngIf="address.invalid && (address.dirty || address.touched)">
+                  <label class="error" for="address" *ngIf="address.errors?.['required']">Please enter address.</label>
+                  <label class="error" for="address" *ngIf="address.errors?.['minlength']">Please enter address with minimum 5 characters.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addCustomerForm.invalid" (click)="addCustomerFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Customer Models End-->
+
+<!-- Edit Customer Models Start -->
+<div class="modal fade" id="editCustomerModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Customer</h4>
+      </div>
+      
+      <form name="editCustomerForm" #editCustomerForm="ngForm">
+        <div class="modal-body">
+          <input type="hidden" name="customerId" [(ngModel)]="editCustomerModal.customerId">
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Name</label>
+                <input type="text" id="customerNameEditCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="editCustomerModal.customerName" name="customerName" required #customerName="ngModel">
+
+                <div *ngIf="customerName.invalid && (customerName.dirty || customerName.touched)">
+                  <label class="error" for="customerName" *ngIf="customerName.errors?.['required']">Please enter customer name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Email</label>
+                <input type="email" id="customerEmailEditCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="editCustomerModal.customerEmail" name="customerEmail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #customerEmail="ngModel">
+
+                <div *ngIf="customerEmail.invalid && (customerEmail.dirty || customerEmail.touched)">
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['required']">Please enter valid email.</label>
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['pattern']">Please enter valid email.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Mobile Number</label>
+                <input type="text" id="mobileNumberEditCustomer" class="form-control" placeholder="Mobile Number"
+                  [(ngModel)]="editCustomerModal.mobileNumber" name="mobileNumber" required minlength="10" maxlength="10" pattern="^[0-9]*$" #mobileNumber="ngModel">
+
+                <div *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['required']">Please enter mobile number.</label>
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['minlength'] || mobileNumber.errors?.['maxlength'] || mobileNumber.errors?.['pattern']">Please enter valid mobile number.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Address</label>
+                <textarea id="addressEditCustomer" class="form-control" placeholder="Address" row="3" cols="7"
+                  [(ngModel)]="editCustomerModal.address" name="address" required minlength="5" #address="ngModel"></textarea>
+
+                <div *ngIf="address.invalid && (address.dirty || address.touched)">
+                  <label class="error" for="address" *ngIf="address.errors?.['required']">Please enter address.</label>
+                  <label class="error" for="address" *ngIf="address.errors?.['minlength']">Please enter address with minimum 5 characters.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Type</label>
+                <select class='form-control' name="customerType" [(ngModel)]="editCustomerModal.customerType">
+                  <option value="Prospect" selected>Prospect</option>
+                  <option value="Customer">Customer</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Status</label>
+                <select class='form-control' name="status" [(ngModel)]="editCustomerModal.status">
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+            
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="editCustomerForm.invalid" (click)="editCustomerFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Customer Models End-->

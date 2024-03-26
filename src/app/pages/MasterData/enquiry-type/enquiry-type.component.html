@@ -1,0 +1,40 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Enquiry Types</div>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Enquiry Type</th>
+                  <th scope="col">Display Color</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!enquiryTypeList">
+                  <td colspan="3" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let enquiryType of enquiryTypeList; let indexOfelement=index;">
+                  <th scope="row" class="center">{{indexOfelement + 1}}</th>
+                  <td>{{enquiryType.enquiryType}}</td>
+                  <td> <span [ngStyle]="{'color': enquiryType.displayColor}"><i class="fa fa-fw fa-square"></i> {{enquiryType.displayColorName}}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+

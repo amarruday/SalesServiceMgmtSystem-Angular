@@ -1,0 +1,48 @@
+.customer {
+  margin: 10px;
+  background-color: #ffc300;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.prospect {
+  margin: 10px;
+  background-color: #9a85e5;
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: white;
+}
+
+.bg-unassigned {
+  background-color: #464e4a !important;
+  color: #fff !important;
+}
+
+.bg-assigned {
+  background-color: #00ACC2 !important;
+  color: #fff !important;
+}
+
+.bg-cancelled {
+  background-color: #E64A19 !important;
+  color: #fff !important;
+}
+
+.bg-prospect {
+  background-color: #ff9e00 !important;
+  color: #fff !important;
+}
+
+.bg-won {
+  background-color: #1BBC9B !important;
+  color: #fff !important;
+}
+
+.bg-lost {
+  background-color: #E64A19 !important;
+  color: #fff !important;
+}
+
+.action {
+  cursor: pointer;
+}

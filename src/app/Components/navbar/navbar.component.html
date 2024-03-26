@@ -1,0 +1,133 @@
+<div class="wrapper">
+
+  <header class="main-header">
+
+    <!-- Logo -->
+    <a href="index2.html" class="logo">
+      <!-- mini logo for sidebar mini 50x50 pixels -->
+      <span class="logo-mini"><b>Y</b>E</span>
+      <!-- logo for regular state and mobile devices -->
+      <span class="logo-lg"><b>Yash</b>Elec</span>
+    </a>
+
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+      <!-- Sidebar toggle button-->
+      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+        <span class="sr-only">Toggle navigation</span>
+      </a>
+        
+      <!-- Navbar Right Menu -->
+      <div class="navbar-custom-menu" *ngIf="systemUser">
+        <ul class="nav navbar-nav">
+          <!-- User Account: style can be found in dropdown.less -->
+          <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="assets/dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
+              <span class="hidden-xs">{{systemUser.fullName}}</span>
+            </a>
+            <ul class="dropdown-menu">
+              <!-- User image -->
+              <li class="user-header">
+                <img src="assets/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                
+                <p>
+                  {{systemUser.fullName}} - {{systemUser.roleName}}
+                </p>
+              </li>
+             
+              <li class="user-footer">
+                <div class="pull-right">
+                  <a href="#" class="btn btn-default btn-flat" (click)="logout()">Sign out</a>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- Left side column. contains the logo and sidebar -->
+  <aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+      
+      <!-- sidebar menu: : style can be found in sidebar.less -->
+      <ul class="sidebar-menu" data-widget="tree">
+        <li class="treeview">
+          <a (click)="redirectToDashboard()"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a>
+        </li>
+       <li class="treeview" *ngIf="systemUser.roleName === 'SERVICE_MANAGER' || systemUser.roleName === 'SERVICE_ENGINEER' || systemUser.roleName === 'ADMIN'">
+          <a href="#">
+            <i class="fa fa-ticket"></i>
+            <span>Tickets</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">  
+            <li><a (click)="redirectToManageTicket();"><i class="fa fa-ticket"></i> Manage Tickets</a></li>
+          </ul>
+        </li>
+        
+        <li class="treeview" *ngIf="systemUser.roleName === 'SALES_MANAGER' || systemUser.roleName === 'SALES_ENGINEER' || systemUser.roleName === 'ADMIN'">
+          <a href="#">
+            <i class="fa fa-inr"></i>
+            <span>Enquiries</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a (click)="redirectToColdVisits()"><i class="fa fa-sun-o"></i> Manage Visit</a></li>
+            <li><a (click)="redirectToManageEnquiries()"><i class="fa fa-sun-o"></i> Manage Enquiries</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview" *ngIf="systemUser.roleName === 'ADMIN'">
+          <a href="#">
+            <i class="fa fa-database"></i>
+            <span>Manage Master Data</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li (click)="redirectToCustomers()"><a><i class="fa fa-database"></i> Customers</a></li>
+            <li (click)="redirectToDeparments()"><a><i class="fa fa-database"></i> Departments</a></li>
+            <li (click)="redirectToEmployees()"><a><i class="fa fa-database"></i> Employees</a></li>
+            <li class="header" style="color: #8aa4af; font-weight: 500; background-color: #495252;">Tickets</li>
+            <li (click)="redirectToTicketTypes()"><a><i class="fa fa-database"></i> Ticket Types</a></li>
+            <li class="header" style="color: #8aa4af; font-weight: 500; background-color: #495252;">Enquiry</li>
+            <li (click)="redirectToActionTypes()"><a><i class="fa fa-database"></i> Action Types</a></li>
+            <li (click)="redirectToBrands()"><a><i class="fa fa-database"></i> Brands</a></li>
+            <li (click)="redirectToCommonReplies()"><a><i class="fa fa-database"></i> Common Replies</a></li>
+            <li (click)="redirectToEnquirySources()"><a><i class="fa fa-database"></i> Enquiry Sources</a></li>
+            <li (click)="redirectToEnquiryTypes()"><a><i class="fa fa-database"></i> Enquiry Types</a></li>
+            <li (click)="redirectToProductCatagories()"><a><i class="fa fa-database"></i> Product Catagories</a></li>
+            <li (click)="redirectToProductTypes()"><a><i class="fa fa-database"></i> Product Types</a></li>
+            <li (click)="redirectToProducts()"><a><i class="fa fa-database"></i> Products</a></li>
+          </ul>
+        </li>
+
+        <li class="treeview" *ngIf="systemUser.roleName === 'ADMIN'">
+          <a (click)="redirectToReports()"><i class="fa fa-fw fa-line-chart"></i> <span> Reports</span></a>
+        </li>
+      </ul>
+    </section>
+    <!-- /.sidebar -->
+  </aside>
+  
+  <div class="content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      All rights reserved.
+    </div>
+    <strong>Copyright &copy; 2021. </strong>
+  </footer>
+</div>

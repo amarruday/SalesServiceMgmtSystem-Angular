@@ -1,0 +1,914 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Enquiries</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" (click)="openAddEnquiryPopup()">Add Enquiry</button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchEnquiryForm" name="searchEnquiryForm">
+              
+              <div class="row">
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="startDate" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+  
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="endDate" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Enquiry Type</label>
+                    <select id="enquiryTypeSearch" class="form-control" [(ngModel)]="enquirySearchBean.enquiryTypeId" name="enquiryTypeId">
+                      <option value="0" selected>Select Enquiry Type</option>
+                      <option *ngFor="let enquiryType of enquiryTypeList" [value]="enquiryType.enquiryTypeId">{{enquiryType.enquiryType}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Enquiry Source</label>
+                    <select id="enquirySourceSearch" class="form-control" [(ngModel)]="enquirySearchBean.enquirySourceId" name="enquirySourceId">
+                      <option value="0" selected>Select Enquiry Source</option>
+                      <option *ngFor="let es of enquirySourceList" [value]="es.enquirySourceId">{{es.enquirySource}}</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="row">
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Enquiry Status</label>
+                    <select id="enquiryStatus" class="form-control" [(ngModel)]="enquirySearchBean.status" name="status">
+                      <option value="Unassigned" selected>Unassigned</option>
+                      <option value="ALL" selected>All</option>
+                      <option value="Assigned">Assigned</option>
+                      <option value="Won">Won</option>
+                      <option value="Prospect">Prospect</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Lost">Lost</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Customer</label>
+                    <select id="customerEnquirySearch" class="form-control" [(ngModel)]="enquirySearchBean.customerId" name="customerId">
+                      <option value="0" selected>Select Customer</option>
+                      <option *ngFor="let cust of customerList" [value]="cust.customerId">{{cust.customerName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Added By</label>
+                    <select id="addedBySearch" class="form-control" [(ngModel)]="enquirySearchBean.addedBy" name="addedBy">
+                      <option value="0" selected>Select Added By</option>
+                      <option *ngFor="let user of addedByList" [value]="user.userId">{{user.fullName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="searchEnquiryFunction();">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Enquiry Date</th>
+                  <th scope="col">Recent Activity Date</th>
+                  <th scope="col">Assigned To</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="enquiryList.length == 0">
+                  <td colspan="9" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                
+                <tr *ngFor="let enquiry of enquiryList | paginate : {
+                  itemsPerPage: 10,
+                  currentPage: page,
+                  totalItems: totalItems
+                };
+                let indexOfElements = index;
+                ">
+
+                  <th scope="row" class="center">{{(page-1) * 10 + indexOfElements + 1}}</th>
+                  <td>
+                    <div>{{enquiry.customer.customerName}}</div>
+                    <!-- <div><span class="bold">Product Type: </span>{{product.productType.productName}}</div> -->
+                  </td>
+                  <td>{{enquiry.product.productName}}</td>
+                  <td>{{enquiry.enquiryType.enquiryType}}</td>
+                  <td>{{enquiry.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td>{{enquiry.recentActivityDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="enquiry.assignedTo == null">-</td>
+                  <td *ngIf="enquiry.assignedTo != null">{{enquiry.assignedTo.fullName}}</td>
+                  <td>{{enquiry.status}}</td>
+                  
+                  <td style="text-align: center;" *ngIf="enquiry.status === 'Won' || enquiry.status === 'Lost' || enquiry.status === 'Cancelled' ">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getEnquiryDetails(enquiry.enquiryId)"><i class="fa fa-fw fa-eye"></i> View</button>
+                  </td>
+
+                  <td style="text-align: center;" *ngIf="enquiry.status === 'Unassigned' || enquiry.status === 'Assigned' || enquiry.status === 'Prospect'">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getEnquiryDetails(enquiry.enquiryId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="paginationDiv">
+              <pagination-controls class="pagination my-pagination" (pageChange)="changePage($event)"
+                previousLabel="Prev" nextLabel="Next"></pagination-controls>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Enquiry Models Start -->
+<div class="modal fade" id="addEnquiryModel" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Enquiry</h4>
+      </div>
+      <form id="addEnquiryForm" name="addEnquiryForm" #addEnquiryForm="ngForm"> 
+        <div class="modal-body">
+          <div class="row">
+            
+            <div class="col-sm-6">
+              
+              <div class="form-group required">
+                <label class='control-label'>Customer</label>
+                <select class="form-control" id="customerAddEnquiry" [(ngModel)]="addEnquiryBean.customerId" name="customerId" required nonZeroValue="0" #customerId="ngModel">
+                  <option value='0' selected>Select Customer</option>
+                  <option *ngFor="let customer of customerList" [value]="customer.customerId">
+                    {{customer.customerName}} &nbsp;&nbsp;
+                   <!-- <span *ngIf="customer.customerType === 'Customer'" class="customer">{{customer.customerType}}</span>
+                    <span *ngIf="customer.customerType === 'Prospect'" class="prospect">{{customer.customerType}}</span> -->
+                    <div style="color:green">{{customer.customerType}}</div>
+                  </option>
+                </select>
+
+                <div *ngIf="customerId.invalid && (customerId.dirty || customerId.touched)">
+                  <label class="error" for="customerId" *ngIf="customerId.errors?.['required']">Please Select Customer.</label>
+                  <label class="error" for="customerId" *ngIf="customerId.errors?.['nonZeroValue']">Please Select Customer.</label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-sm-6">
+              <button type="button" style="margin-top: 25px;" class="btn btn-primary" (click)="openNewCustomerModal()">New Customer ?</button>    
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              
+              <div class="form-group required">
+                <label class='control-label'>Enquiry Source</label>
+                <select class="form-control" id="enquirySourceAddEnquiry" [(ngModel)]="addEnquiryBean.enquirySourceId" name="enquirySourceId" required nonZeroValue="0" #enquirySourceId="ngModel">
+                  <option value="0" selected>Select Enquiry Source</option>
+                      <option *ngFor="let es of enquirySourceList" [value]="es.enquirySourceId">{{es.enquirySource}}</option>
+                </select>
+
+                <div *ngIf="enquirySourceId.invalid && (enquirySourceId.dirty || enquirySourceId.touched)">
+                  <label class="error" for="enquirySourceId" *ngIf="enquirySourceId.errors?.['required']">Please Select enquiry source.</label>
+                  <label class="error" for="enquirySourceId" *ngIf="enquirySourceId.errors?.['nonZeroValue']">Please Select enquiry source.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Enquiry Type</label>
+                <select id="enquiryTypeAddEnquiry" class="form-control" [(ngModel)]="addEnquiryBean.enquiryTypeId" name="enquiryTypeId" required nonZeroValue="0" #enquiryTypeId="ngModel">
+                  <option value="0" selected>Select Enquiry Type</option>
+                  <option *ngFor="let enquiryType of enquiryTypeList" [value]="enquiryType.enquiryTypeId">{{enquiryType.enquiryType}}</option>
+                </select>
+                <div *ngIf="enquiryTypeId.invalid && (enquiryTypeId.dirty || enquiryTypeId.touched)">
+                  <label class="error" for="enquiryTypeId" *ngIf="enquiryTypeId.errors?.['required']">Please Select enquiry type.</label>
+                  <label class="error" for="enquiryTypeId" *ngIf="enquiryTypeId.errors?.['nonZeroValue']">Please Select enquiry type.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Brands</label>
+                <select id="brandAddEnquiry" class="form-control" name="brandId">
+                  <option value="0" selected>Select Brand</option>
+                  <option *ngFor="let brand of brandList" [value]="brand.brandId">{{brand.brandName}}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Product Type</label>
+                <select id="productTypeAddEnquiry" class="form-control" name="productTypeId" (change)="getProducts()">
+                  <option value="0" selected>Select Product Type</option>
+                  <option *ngFor="let pc of userWiseproductTypeList" [value]="pc.productTypeId">{{pc.productName}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="productBean" style="display: none; border: 1px solid red; padding: 10px; border-radius: 8px; margin-bottom:15px;">
+            
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group required">
+                  <label class='control-label'>Product</label>
+                  <select id="productAddEnquiry" class="form-control" >
+                    <option value="0" selected>Select Product</option>
+                    <option *ngFor="let product of productList" [value]="product.productId">{{product.productName}}</option>
+                  </select>
+
+                  <label for="productAddEnquiry" id="productAddEnquiry-error" class="error"></label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              
+              <div class="col-sm-4">
+                <div class="form-group required">
+                  <label class='control-label'>Quantity</label>
+                  <input type="text" class="form-control" placeholder="Quantity" name="quantity" id="quantityAddEnqiry">
+                  <label for="quantityAddEnqiry" id="quantityAddEnqiry-error" class="error"></label>
+                </div>
+              </div>
+  
+              <div class="col-sm-4">
+                <div class="form-group required">
+                  <label class='control-label'>Product Remark</label>
+                  <input type="text" class="form-control" placeholder="Product Remark" name="productRemark" id="productRemarkAddEnqiry">
+                  <label for="productRemarkAddEnqiry" id="productRemarkAddEnqiry-error" class="error"></label>
+                </div>
+              </div>
+
+              <div class="col-sm-4" style="margin-top: 25px;">
+                <button class="btn btn-primary" (click)="addProductToTable()">Add Product</button>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <th>#</th>
+                    <th>Product Name</th>
+                    <th>Product Quantity</th>
+                    <th>Product Remark</th>
+                    <th>Action</th>
+                  </thead>
+                  <tbody id="tableBody">
+                    <tr *ngIf="!productBeanArr">
+                      <td colspan="5" style="color: red; text-align: center;"><span>No products added!</span></td>
+                    </tr>
+                    <tr *ngFor="let pb of productBeanArr; let indexOfelement=index;">
+                      <td>{{indexOfelement + 1}}</td>
+                      <td>{{pb.productName}}</td>
+                      <td>{{pb.quantity}}</td>
+                      <td>{{pb.productRemark}}</td>
+                      <td><button class="btn btn-danger" (click)="deleteProductFromTable(indexOfelement)"><i class="fa fa-fw fa-trash"></i></button></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Enquiry Remark</label>
+                <textarea id="enquriryRemark" class="form-control" rows="3" placeholder="Enquiry Remark" minlength="5" required [(ngModel)]="addEnquiryBean.remark" name="remark" #remark="ngModel"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter enquiry remark</label>
+                  <label class="error" for="remark" *ngIf="remark.errors?.['minlength']">Please enter at least 5 Characters</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="checkbox">
+                <label><input type="checkbox" id="selfAssignedCheckBox" [(ngModel)]="addEnquiryBean.isSelfAssigned" name="isSelfAssigned" (change)="selfAssignedCheck()" checked><b>is Self Assigned</b></label>
+              </div>
+              <div id="assignedToDiv" style="display: none">
+                <div class="form-group required">
+                  <label class='control-label'>Assign To</label>
+                  <select id="assignToAddEnquiry" class="form-control" [(ngModel)]="addEnquiryBean.assignedToId" name="assignedToId">
+                    <option value="0" selected>Select User</option>
+                    <option *ngFor="let user of assignToList" [value]="user.userId">{{user.fullName}} [{{user.role.rolename}}]</option>
+                  </select>
+  
+                  <label for="productAddEnquiry" id="productAddEnquiry-error" class="error"></label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="addEnquiryForm.invalid" (click)="addEnquiryFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Enquiry Models End-->
+
+<!-- Add Customer Models Start -->
+<div class="modal fade" id="addCustomerModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Customer</h4>
+      </div>
+      
+      <form name="addCustomerForm" #addCustomerForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Name</label>
+                <input type="text" id="customerNameAddCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="addCustomerModal.customerName" name="customerName" required #customerName="ngModel">
+
+                <div *ngIf="customerName.invalid && (customerName.dirty || customerName.touched)">
+                  <label class="error" for="customerName" *ngIf="customerName.errors?.['required']">Please enter customer name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Email</label>
+                <input type="email" id="customerEmailAddCustomer" class="form-control" placeholder="Customer Name"
+                  [(ngModel)]="addCustomerModal.customerEmail" name="customerEmail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #customerEmail="ngModel">
+
+                <div *ngIf="customerEmail.invalid && (customerEmail.dirty || customerEmail.touched)">
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['required']">Please enter valid email.</label>
+                  <label class="error" for="customerEmail" *ngIf="customerEmail.errors?.['pattern']">Please enter valid email.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Mobile Number</label>
+                <input type="text" id="mobileNumberAddCustomer" class="form-control" placeholder="Mobile Number"
+                  [(ngModel)]="addCustomerModal.mobileNumber" name="mobileNumber" required minlength="10" maxlength="10" pattern="^[0-9]*$" #mobileNumber="ngModel">
+
+                <div *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['required']">Please enter mobile number.</label>
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['minlength'] || mobileNumber.errors?.['maxlength'] || mobileNumber.errors?.['pattern']">Please enter valid mobile number.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Customer Address</label>
+                <textarea id="addressAddCustomer" class="form-control" placeholder="Address" row="3" cols="7"
+                  [(ngModel)]="addCustomerModal.address" name="address" required minlength="5" #address="ngModel"></textarea>
+
+                <div *ngIf="address.invalid && (address.dirty || address.touched)">
+                  <label class="error" for="address" *ngIf="address.errors?.['required']">Please enter address.</label>
+                  <label class="error" for="address" *ngIf="address.errors?.['minlength']">Please enter address with minimum 5 characters.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addCustomerForm.invalid" (click)="addCustomerFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Customer Models End-->
+
+<!-- View Enquiry Details Modal Starts -->
+<div class="modal fade" id="viewEnquiryDetailsModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Enquiry Details</h4>
+      </div>
+      
+      <div class="modal-body">
+        <div *ngIf="enquiryDetailsBean">
+          
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Customer Name: </span>
+              <span>{{enquiryDetailsBean.customer.customerName}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Enquiry Source: </span>
+              <span>{{enquiryDetailsBean.enquirySource.enquirySource}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Enquiry Type: </span>
+              <span>{{enquiryDetailsBean.enquiryType.enquiryType}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Product: </span>
+              <span>{{enquiryDetailsBean.product.productName}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Product Type: </span>
+              <span>{{enquiryDetailsBean.product.productType.productName}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Brand: </span>
+              <span>{{enquiryDetailsBean.product.brand.brandName}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Product Quantity: </span>
+              <span>{{enquiryDetailsBean.quantity}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Product Remark: </span>
+              <span *ngIf="enquiryDetailsBean.productRemark != null && enquiryDetailsBean.productRemark != ''">{{enquiryDetailsBean.productRemark}}</span>
+              <span *ngIf="enquiryDetailsBean.productRemark == null && enquiryDetailsBean.productRemark == ''">-</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Added By: </span>
+              <span>{{enquiryDetailsBean.addedBy.fullName}} <b>[{{enquiryDetailsBean.addedBy.role.rolename}}]</b></span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Added Date: </span>
+              <span>{{enquiryDetailsBean.addedDate | date:"dd MMM yyyy"}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Recent Activity Date </span>
+              <span>{{enquiryDetailsBean.recentActivityDate | date:"dd MMM yyyy"}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Status: </span>
+              <span>{{enquiryDetailsBean.status}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Assigned By: </span>
+              <span *ngIf="enquiryDetailsBean.assignedBy != null && enquiryDetailsBean.assignedBy != ''">{{enquiryDetailsBean.assignedBy.fullName}}</span>
+              <span *ngIf="enquiryDetailsBean.assignedBy == null && enquiryDetailsBean.assignedBy == ''">-</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Assigned To: </span>
+              <span *ngIf="enquiryDetailsBean.assignedTo != null && enquiryDetailsBean.assignedTo != ''">{{enquiryDetailsBean.assignedTo.fullName}}</span>
+              <span *ngIf="enquiryDetailsBean.assignedTo == null && enquiryDetailsBean.assignedTo == ''">-</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Remark: </span>
+              <span>{{enquiryDetailsBean.remark}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row" style="float:right" *ngIf="enquiryDetailsBean.status != 'Won' && enquiryDetailsBean.status != 'Lost' && enquiryDetailsBean.status != 'Cancelled' ">
+            <div class="col-sm-12">
+              
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-flat">Actions</button>
+                <button type="button" class="btn btn-primary btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu" *ngIf="enquiryDetailsBean.status === 'Unassigned'">
+                  <li><a class="action" (click)="openAssignEnquiryModal(enquiryDetailsBean.enquiryId);">Assign Enquriry</a></li>
+                  <li><a class="action" (click)="openCancelEnquiryModal(enquiryDetailsBean.enquiryId);">Cancel Enquriry</a></li>
+                </ul>
+                <ul class="dropdown-menu" role="menu" *ngIf="enquiryDetailsBean.status === 'Assigned'">
+                  <li><a class="action" (click)="openChangeToProspectEnquiryModal(enquiryDetailsBean.enquiryId);">Change to Prospet</a></li>
+                  <li><a class="action" (click)="openCancelEnquiryModal(enquiryDetailsBean.enquiryId);">Cancel Enquriry</a></li>
+                </ul>
+                <ul class="dropdown-menu" role="menu" *ngIf="enquiryDetailsBean.status === 'Prospect'">
+                  <li><a class="action" (click)="openWonEnquiryModal(enquiryDetailsBean.enquiryId);">Won Enquiry</a></li>
+                  <li><a class="action" (click)="openLostEnquiryModal(enquiryDetailsBean.enquiryId);">Lost Enquriry</a></li>
+                </ul>
+              </div>
+
+            </div>
+            
+          </div>
+
+        </div>
+
+        <div class="mtb"></div>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="timeline">
+                
+                <ul class="timeline" *ngFor="let ea of enquiryActivityList; let i = index">
+                  
+                  <li class="time-label" *ngIf="ea.status === 'Assigned'"><span class="bg-assigned">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Unassigned'"><span class="bg-unassigned">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Cancelled'"><span class="bg-cancelled">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Prospect'"><span class="bg-prospect">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Won'"><span class="bg-won">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Lost'"><span class="bg-lost">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+
+                  <li *ngIf="ea.status === 'Unassigned'">
+                    <i class="fa fa-fw fa-circle bg-unassigned"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Assigned'">
+                    <i class="fa fa-fw fa-check-circle bg-assigned"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Cancelled'">
+                    <i class="fa fa-fw fa-times-circle bg-cancelled"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Prospect'">
+                    <i class="fa fa-fw fa-hand-o-right bg-prospect"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Won'">
+                    <i class="fa fa-fw fa-thumbs-o-up bg-won"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Lost'">
+                    <i class="fa fa-fw fa-thumbs-o-down bg-lost"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+  
+                  
+                </ul>
+    
+              </ul>
+        
+            </div>
+            
+          </div>
+        </section>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Enquiry Details Modal Ends -->
+
+<!-- Assign Enquiry Modal Start -->
+<div class="modal fade" id="assignEnqiryModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Assign Enquiry</h4>
+      </div>
+      
+      <form name="assignEnquiryForm" #assignEnquiryForm="ngForm">
+        <input type="hidden" [(ngModel)]="assignEnquiryBean.enquiryId" name="enquiryId" id="enquiryIdAssignEnquiry">
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Assign To</label>
+                
+                <select class="form-control" id="assignToAssignEnquiry" [(ngModel)]="assignEnquiryBean.assignToId" name="assignToId" required nonZeroValue="0" #assignToId="ngModel">
+                  <option value='0' selected>Select User</option>
+                  <option *ngFor="let user of assignToAssignEnqList" [value]="user.userId">{{user.fullName}}</option>
+                </select>
+
+                <div *ngIf="assignToId.invalid && (assignToId.dirty || assignToId.touched)">
+                  <label class="error" for="assignToId" *ngIf="assignToId.errors?.['required']">Please select employee.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                
+                <textarea class="form-control" id="remarkAssignEnquiry" placeholder="Remark" [(ngModel)]="assignEnquiryBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                  
+
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="assignEnquiryForm.invalid" (click)="assignEnquiryFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Assign Enquiry Modal End -->
+
+<!-- Cancel Enquiry Modal Start -->
+<div class="modal fade" id="cancelEnqiryModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cancel Enquiry</h4>
+      </div>
+      
+      <form name="cancelEnquiryForm" #cancelEnquiryForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="cancelEnquiryBean.enquiryId" name="enquiryId" id="enquiryIdCancelEnquiry">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                
+                <textarea class="form-control" id="remarkAssignEnquiry" placeholder="Remark" [(ngModel)]="cancelEnquiryBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                  
+
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="cancelEnquiryForm.invalid" (click)="cancelEnquiryFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+      
+    </div>
+  </div>
+</div>
+<!-- Cancel Enquiry Modal End -->
+
+<!-- Change to Prospect Enquiry Modal Start -->
+<div class="modal fade" id="convertToProspectEnqiryModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Convert to Prospect</h4>
+      </div>
+      
+      <form name="convertToProspectEnquiryForm" #convertToProspectEnquiryForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="convertToProspectEnquiryBean.enquiryId" name="enquiryId" id="enquiryIdConvertToProspectEnquiry">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkConvertToProspectEnquiry" placeholder="Remark" [(ngModel)]="convertToProspectEnquiryBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="convertToProspectEnquiryForm.invalid" (click)="converToProspectFunction()">Convert to Prospect</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Change to Prospect Enquiry Modal End -->
+
+<!-- Won Enquiry Modal Start -->
+<div class="modal fade" id="wonEnqiryModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Won Enquiry</h4>
+      </div>
+      
+      <form name="wonEnquiryForm" #wonEnquiryForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="wonEnquiryBean.enquiryId" name="enquiryId" id="enquiryIdWonEnquiry">
+          <div class="row">
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Machine Serial Number</label>
+                <input type="text" id="machineSerialNumberWonEnquiry" class="form-control" placeholder="Machine Serial Number"
+                  [(ngModel)]="wonEnquiryBean.machineSerialNumber" name="machineSerialNumber" required #machineSerialNumber="ngModel">
+
+                <div *ngIf="machineSerialNumber.invalid && (machineSerialNumber.dirty || machineSerialNumber.touched)">
+                  <label class="error" for="machineSerialNumber" *ngIf="machineSerialNumber.errors?.['required']">Please enter machine serial number.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">  
+              <div class="form-group required">
+                <label class='control-label'>Purchase Date</label>
+                <div class="input-group date">
+                  <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                  <input type="text" class="form-control pull-right" id="startDateWonEnquiry" name="startDate" placeholder="Start Date" readonly="readonly">
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkWonEnquiry" placeholder="Remark" [(ngModel)]="wonEnquiryBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="wonEnquiryForm.invalid" (click)="wonEnquryFunction()">Won</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Won Enquiry Modal End -->
+
+<!-- Lost Enquiry Modal Start -->
+<div class="modal fade" id="lostEnqiryModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Lost Enquiry</h4>
+      </div>
+      
+      <form name="lostEnquiryForm" #lostEnquiryForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="lostEnquiryBean.enquiryId" name="enquiryId" id="enquiryIdLostEnquiry">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkLstEnquiry" placeholder="Remark" [(ngModel)]="lostEnquiryBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="lostEnquiryForm.invalid" (click)="lostEnquiryFunction()">Lost</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Lost Enquiry Modal End -->

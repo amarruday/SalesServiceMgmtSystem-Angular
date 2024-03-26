@@ -1,0 +1,341 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+          
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Visits</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addVisitModal">
+              Add Visit
+            </button>
+          </div>
+        </div>
+          
+        <div class="box-body">
+          <div class="container-fluid">
+            <form action="">
+                
+              <div class="row">
+      
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="startDate" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="endDate" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Action Type</label>
+                    <select class="form-control" id="actionTypeColdVisit" [(ngModel)]="SearchVisitBean.actionTypeId" name="actionTypeId">
+                      <option value='0' selected="selected">Select Action Type</option>
+                      <option *ngFor="let actionType of actionTypsList" [value]="actionType.actionTypeId">
+                        {{actionType.actionType}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+                    
+              <div class="row">
+                    
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Added By</label>
+                    <select class="form-control" id="addedBy" [(ngModel)]="SearchVisitBean.userId" name="userId">
+                      <option value='0' selected>Select User</option>
+                      <option *ngFor="let user of addedByList" [value]="user.userId">
+                        {{user.fullName}} [{{[user.roleName]}}]
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>Customer</label>
+                    <select class="form-control" id="customerId" [(ngModel)]="SearchVisitBean.customerId" name="customerId">
+                      <option value='0' selected>Select Customer</option>
+                      <option *ngFor="let customer of customerList" [value]="customer.customerId">
+                        {{customer.customerName}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="searchVisits()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+            
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Action Type</th>
+                  <th scope="col">Added Date</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!visitList">
+                  <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let visit of visitList; let indexOfelement=index;">
+                  <th scope="row">{{indexOfelement+1}}</th>
+                  <td>{{visit.customer.customerName}}</td>
+                  <td>{{visit.description}}</td>
+                  <td>{{visit.actionTypeName}}</td>
+                  <td>{{visit.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td><button type="button" class="btn btn-sm btn-info" (click)="viewVisitDetails(visit.visitId)">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+          
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- Add Visit Models Start -->
+  <div class="modal fade" id="addVisitModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add Visit</h4>
+        </div>
+        <form id="addVisitForm" name="addVisitForm" #addVisitForm="ngForm"> 
+          <div class="modal-body">
+            <div class="row">
+              
+              <div class="col-sm-6">
+                
+                <div class="form-group required">
+                  <label class='control-label'>Customer Name</label>
+                  <select class="form-control" style="width: 100%;" id="customerAddVisit" name="customerId" (ngModelChange)="getCustomerDetails($event)" required nonZeroValue="0" [(ngModel)]="visit.customerId" #customerId="ngModel">
+                    <option value='0' selected>Select Customer</option>
+                    <option *ngFor="let customer of customerList" [value]="customer.customerId">
+                      {{customer.customerName}}
+                    </option>
+                  </select>
+
+                  <div *ngIf="customerId.invalid && (customerId.dirty || customerId.touched)">
+                    <label class="error" for="customerId" *ngIf="customerId.errors?.['required']">Please Select Customer.</label>
+                    <label class="error" for="customerId" *ngIf="customerId.errors?.['nonZeroValue']">Please Select Customer.</label>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group required">
+                  <label class='control-label'>Customer Email</label>
+                  <input type="text" id="customerEmailAddVisit" [(ngModel)]="visit.customerEmail" name="customerEmail" class="form-control" placeholder="Customer Email" readonly="readonly">
+                </div>
+              </div>
+              
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group required">
+                  <label class='control-label'>Mobile Number</label>
+                  <input type="text" id="mobileNumberAddVisit" [(ngModel)]="visit.mobileNumber" name="mobileNumber" class="form-control" placeholder="Mobile Number" readonly="readonly">
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group required">
+                  <label class='control-label'>Customer Address</label>
+                  <textarea class="form-control" id="customerAddressAddVisit" [(ngModel)]="visit.customerAddress" name="customerAddress" rows="3" placeholder="Address" readonly="readonly"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group required">
+                  <label class='control-label'>Action Type</label>
+                  <select id="actionTypeAddVisit" [(ngModel)]="visit.actionTypeId" name="actionTypeId" required nonZeroValue="0" #actionTypeId="ngModel" class="form-control">
+                    <option value='0' selected>Select Action Type</option>
+                    <option *ngFor="let actionType of actionTypsList" [value]="actionType.actionTypeId">
+                      {{actionType.actionType}}
+                    </option>
+                  </select>
+                  <div *ngIf="actionTypeId.invalid && (actionTypeId.dirty || actionTypeId.touched)">
+                    <label class="error" for="actionTypeId" *ngIf="actionTypeId.errors?.['required']">Please Select Action Type.</label>
+                    <label class="error" for="actionTypeId" *ngIf="actionTypeId.errors?.['nonZeroValue']">Please Select Action Type.</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-6">
+                <div class="form-group required">
+                    <label class='control-label'>Visit Description</label>&nbsp;<span class="link" (click)="getCommonReplies();">Select Common Replies</span>
+                    <textarea id="decriptionAddVisit" class="form-control CommonReplyTextBox" rows="3" placeholder="Visit Description" minlength="5" required [(ngModel)]="visit.description" name="description" #description="ngModel"></textarea>
+                    <div *ngIf="description.invalid && (description.dirty || description.touched)">
+                      <label class="error" for="description" *ngIf="description.errors?.['required']">Please enter description</label>
+                      <label class="error" for="description" *ngIf="description.errors?.['minlength']">Please enter at least 5 Characters</label>
+                    </div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="addVisitForm.invalid" (click)="addVisit()">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>          
+      </div>
+    </div>
+  </div>
+  <!-- Add Visit Models End-->
+
+  <!-- View Visit Details Model Start -->
+  <div class="modal fade" id="visitDetailsModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Visit Details</h4>
+        </div>
+
+        <div class="modal-body" *ngIf="visitDetails">
+          <div class="row">
+            <div class="col-sm-6">
+              <span class="bold">Customer Name: </span>
+              <span>{{visitDetails.customer.customerName}}</span>
+            </div>
+            <div class="col-sm-6">
+              <span class="bold">Customer Email: </span>
+              <span>{{visitDetails.customer.customerEmail}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+          
+          <div class="row">
+            <div class="col-sm-6">
+              <span class="bold">Address: </span>
+              <span>{{visitDetails.customer.address}}</span>
+            </div>
+            <div class="col-sm-6">
+              <span class="bold">Mobile Number: </span>
+              <span>{{visitDetails.customer.mobileNumber}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <span class="bold">Action Type: </span>
+              <span>{{visitDetails.actionTypeName}}</span>
+            </div>
+            <div class="col-sm-6">
+              <span class="bold">Description: </span>
+              <span>{{visitDetails.description}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <span class="bold">Added By: </span>
+              <span>{{visitDetails.addedByName}}</span>
+            </div>
+            <div class="col-sm-6">
+              <span class="bold">Added Date: </span>
+              <span>{{visitDetails.addedDate | date:"dd MMM yyyy"}}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- View Visit Details Model End-->
+
+  <!-- Common Replies Model -->
+  <div class="modal fade" id="commonReplyModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Common Visit Replies</h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col" style="width: 5%; text-align: center;">#</th>
+                  <th scope="col">Reply Text</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!commonReplyList">
+                  <td colspan="2" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let cr of commonReplyList">
+                  <th scope="row" id='cr_'>
+                    <input type="checkbox" class="flat-red" value="{{cr.commonReply}}" name="CommonReplyId">
+                  </th>
+                  <td>{{cr.commonReply}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="saveCommonReplies()">Select</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Common Replies Model End -->

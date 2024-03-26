@@ -1,0 +1,339 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Products</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" (click)="openAddProductModal()">
+              Add Product
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchProductForm" name="searchProductForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Product Type</label>
+                    <select id="productTypeSearchProductForm" class="form-control" [(ngModel)]="productSearchBean.productTypeId" name="productTypeId">
+                      <option value="0" selected>Select Product Type</option>
+                      <option *ngFor="let productType of productTypeList" [value]="productType.productTypeId">{{productType.productName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Brand</label>
+                    <select id="brandSearchProductForm" class="form-control" [(ngModel)]="productSearchBean.brandId" name="brandId">
+                      <option value="0" selected>Select Brand</option>
+                      <option *ngFor="let brand of brandList" [value]="brand.brandId">{{brand.brandName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="searchProductsFunction()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col" style="width: 60%;">Product Name</th>
+                  <th scope="col">Brand</th>
+                  <th scope="col" style="text-align: center;">Status</th>
+                  <th scope="col" style="text-align: center; width: 10%;">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!productList">
+                  <td colspan="4" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                
+                <tr *ngFor="let product of productList | paginate : {
+                  itemsPerPage: 10,
+                  currentPage: page,
+                  totalItems: totalItems
+                };
+                let indexOfElements = index;
+                ">
+
+                  <th scope="row" class="center">{{(page-1) * 10 + indexOfElements + 1}}</th>
+                  <td>
+                    <div>{{product.productName}}</div>
+                    <div><span class="bold">Product Type: </span>{{product.productType.productName}}</div>
+                  </td>
+                  <td>{{product.brand.brandName}} {{product.status}}</td>
+                  <td *ngIf="product.status === true" style="text-align: center; vertical-align: middle;"><span class="active">Active</span></td>
+                  <td *ngIf="product.status === false"style="text-align: center; vertical-align: middle;"><span class="inactive">Inactive</span></td>
+                  <td style="text-align: center;">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getProductForEdit(product.productId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="margin-left: 5px;" (click)="getProductDetails(product.productId)"><i class="fa fa-fw fa-eye"></i> View</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="paginationDiv">
+              <pagination-controls class="pagination my-pagination" (pageChange)="changePage($event)"
+                previousLabel="Prev" nextLabel="Next"></pagination-controls>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Product Models Start -->
+<div class="modal fade" id="addProductModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Product</h4>
+      </div>
+      <form name="addProductForm" #addProductForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Product Type</label>
+                <select id="productTypeAddProductForm" class="form-control" [(ngModel)]="addProductModal.productTypeId" name="productTypeId" nonZeroValue="0" #productTypeId="ngModel" (ngModelChange)="getTicketPrefix($event)">
+                  <option value="0" selected>Select Product Type</option>
+                  <option *ngFor="let productType of activeProductTypeList" [value]="productType.productTypeId">{{productType.productName}}</option>
+                </select>
+
+                <div *ngIf="productTypeId.invalid && (productTypeId.dirty || productTypeId.touched)">
+                  <label class="error" for="productTypeId" *ngIf="productTypeId.errors?.['nonZeroValue']">Please select product type.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Brand</label>
+                <select id="brandAddProductForm" class="form-control" [(ngModel)]="addProductModal.brandId" name="brandId" nonZeroValue="0" #brandId="ngModel">
+                  <option value="0" selected>Select Brand</option>
+                  <option *ngFor="let brand of activeBrandsList" [value]="brand.brandId">{{brand.brandName}}</option>
+                </select>
+
+                <div *ngIf="brandId.invalid && (brandId.dirty || brandId.touched)">
+                  <label class="error" for="brandId" *ngIf="brandId.errors?.['nonZeroValue']">Please select brand.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Ticket Prefix</label>
+                <input type="text" class="form-control" placeholder="Ticket Prefix" [(ngModel)]="addProductModal.ticketPrefix" name="ticketPrefix" readonly="readonly">
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Product Name</label>
+                <input type="text" class="form-control" placeholder="Product Name" [(ngModel)]="addProductModal.productName" name="productName" required #productName="ngModel">
+                <div *ngIf="productName.invalid && (productName.dirty || productName.touched)">
+                  <label class="error" for="productName" *ngIf="productName.errors?.['required']">Please enter prduct name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Warranty In Years</label>
+                <input type="text" class="form-control" placeholder="Warranty In Years" [(ngModel)]="addProductModal.warrantyInYears" name="warrantyInYears" required nonZeroValue="0" #warrantyInYears="ngModel">
+                <div *ngIf="warrantyInYears.invalid && (warrantyInYears.dirty || warrantyInYears.touched)">
+                  <label class="error" for="warrantyInYears" *ngIf="warrantyInYears.errors?.['required']">Please enter warranty in years.</label>
+                  <label class="error" for="warrantyInYears" *ngIf="warrantyInYears.errors?.['nonZeroValue']">Please enter warranty in years.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addProductForm.invalid" (click)="addProductFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Action Tye Models End-->
+
+<!-- Edit Product Models Start -->
+<div class="modal fade" id="editProductModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit Product</h4>
+      </div>
+      <form name="editProductForm" #editProductForm="ngForm">
+        <div class="modal-body">
+          <input type="hidden" name="productId" [(ngModel)]="editProductModal.productId">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Product Type</label>
+                <select id="productTypeEditProductForm" class="form-control" [(ngModel)]="editProductModal.productTypeId" name="productTypeId" nonZeroValue="0" #productTypeId="ngModel" (ngModelChange)="getTicketPrefixEditTicket($event)">
+                  <option value="0" selected>Select Product Type</option>
+                  <option *ngFor="let productType of activeProductTypeList" [value]="productType.productTypeId">{{productType.productName}}</option>
+                </select>
+
+                <div *ngIf="productTypeId.invalid && (productTypeId.dirty || productTypeId.touched)">
+                  <label class="error" for="productTypeId" *ngIf="productTypeId.errors?.['nonZeroValue']">Please select product type.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Brand</label>
+                <select id="brandEditProductForm" class="form-control" [(ngModel)]="editProductModal.brandId" name="brandId" nonZeroValue="0" #brandId="ngModel">
+                  <option value="0" selected>Select Brand</option>
+                  <option *ngFor="let brand of activeBrandsList" [value]="brand.brandId">{{brand.brandName}}</option>
+                </select>
+
+                <div *ngIf="brandId.invalid && (brandId.dirty || brandId.touched)">
+                  <label class="error" for="brandId" *ngIf="brandId.errors?.['nonZeroValue']">Please select brand.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Ticket Prefix</label>
+                <input type="text" class="form-control" placeholder="Ticket Prefix" [(ngModel)]="editProductModal.ticketPrefix" name="ticketPrefix" readonly="readonly">
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Product Name</label>
+                <input type="text" class="form-control" placeholder="Product Name" [(ngModel)]="editProductModal.productName" name="productName" required #productName="ngModel">
+                <div *ngIf="productName.invalid && (productName.dirty || productName.touched)">
+                  <label class="error" for="productName" *ngIf="productName.errors?.['required']">Please enter prduct name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Warranty In Years</label>
+                <input type="text" class="form-control" placeholder="Warranty In Years" [(ngModel)]="editProductModal.warrantyInYears" name="warrantyInYears" required nonZeroValue="0" #warrantyInYears="ngModel">
+                <div *ngIf="warrantyInYears.invalid && (warrantyInYears.dirty || warrantyInYears.touched)">
+                  <label class="error" for="warrantyInYears" *ngIf="warrantyInYears.errors?.['required']">Please enter warranty in years.</label>
+                  <label class="error" for="warrantyInYears" *ngIf="warrantyInYears.errors?.['warrantyInYears']">Please enter warranty in years.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Status</label>
+                <select id="statusEditProductForm" class="form-control" [(ngModel)]="editProductModal.status" name="status">
+                  <option value="true">Active</option>
+                  <option value="false">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="editProductForm.invalid" (click)="updateProductFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Edit Action Tye Models End-->
+
+<!-- View Product Details Models Start -->
+<div class="modal fade" id="viewProductDetailsModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">View Product Details</h4>
+      </div>
+
+      <div class="modal-body" *ngIf="productDetails">
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Product Name: </span>
+            <span>{{productDetails.productName}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Product Brand: </span>
+            <span>{{productDetails.brand.brandName}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+        
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Product Catagory: </span>
+            <span>{{productDetails.productType.productCatagory.productCatagoryName}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Product Type: </span>
+            <span>{{productDetails.productType.productName}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Ticket Prefix: </span>
+            <span>{{productDetails.ticketPrefix}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Status: </span>
+            <span>{{productDetails.status}}</span>
+          </div>
+        </div>
+
+      </div>
+        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Customer Models End-->

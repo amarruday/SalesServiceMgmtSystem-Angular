@@ -1,0 +1,317 @@
+<section class="content" id="adminDashboard" style="display: none;">
+  
+  <!-- Ticket Count Statistics Starts --> 
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+          
+        <div class="box-header" style="background-color: #3c8dbc; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 8px;">Ticket Statistics [{{monthName}}]</div>
+          </div>
+        </div>
+
+        <div class="box-body" style="margin-top: 10px" *ngIf="ticketStats">
+          <div class="container-fluid">
+            <div class="row">
+              
+              <div class="col-sm-2">
+                <div class="small-box bg-aqua" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.unassignedCount}}</h3>
+                    <p>Unassigned</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-green" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.assignedCount}}</h3>
+                    <p>Assigned</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <div class="col-sm-2">
+                <div class="small-box bg-yellow" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.inProgressCount}}</h3>
+                    <p>In-Progress</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-red" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.completedCount}}</h3>
+                    <p>Completed</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-purple" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.cancelledCount}}</h3>
+                    <p>Cancelled</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-blue" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{ticketStats.totalTicketsCount}}</h3>
+                    <p>Total Tickets</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!--Ticket Count Statistics Ends -->
+
+
+  <!-- Recent 3 Tickets Starts-->
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+          
+        <div class="box-header" style="background-color: #3c8dbc; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5px;">Assigned Pending Tickets [Recent 3]</div>
+          </div>
+        </div>
+
+        <div class="box-body" style="margin-top: 10px">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Ticket Type</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Added On</th>
+                  <th scope="col">Assigned To</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="recentThreeTickets.length == 0">
+                  <td colspan="8" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                
+                <tr *ngFor="let ticket of recentThreeTickets; let indexOfElements = index;">
+
+                  <th scope="row" class="center">{{indexOfElements + 1}}</th>
+                  <td>{{ticket.customer.customerName}}</td>
+                  <td>{{ticket.product.productName}}</td>
+                  <td>{{ticket.ticketType.ticketType}}</td>
+                  <td>{{ticket.priority}}</td>
+                  <td>{{ticket.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="ticket.assignedTo == null">-</td>
+                  <td *ngIf="ticket.assignedTo != null">{{ticket.assignedTo.fullName}}</td>
+                  <td>{{ticket.status}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!-- Recent 3 Tickets Ends-->
+
+  <!-- Enquiry Count Statistics Starts --> 
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+          
+        <div class="box-header" style="background-color: #3c8dbc; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 8px;">Enquiry Statistics [{{monthName}}]</div>
+          </div>
+        </div>
+
+        <div class="box-body" style="margin-top: 10px">
+          <div class="container-fluid">
+            <div class="row">
+              
+              <div class="col-sm-2">
+                <div class="small-box bg-aqua" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.unassignedCount}}</h3>
+                    <p>Unassigned</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-green" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.assignedCount}}</h3>
+                    <p>Assigned</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <div class="col-sm-2">
+                <div class="small-box bg-yellow" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.prospectCount}}</h3>
+                    <p>Prospect</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-red" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.wonCount}}</h3>
+                    <p>Won</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-purple" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.cancelledCount}}</h3>
+                    <p>Cancelled</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+              <!-- ./col -->
+              <div class="col-sm-2">
+                <div class="small-box bg-blue" style="overflow: hidden">
+                  <div class="icon">
+                    <i class="fa fa-fw fa-ticket"></i>
+                  </div>
+                  <div class="inner">
+                    <h3>{{enquiryStats.lostCount}}</h3>
+                    <p>Lost</p>
+                  </div>
+                </div>
+              </div>
+              <!-- ./col -->
+
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <!--Enquiry Count Statistics Ends -->
+
+  <!-- Recent 3 Enquiries Starts-->
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #3c8dbc; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5px;">Assigned Pending Enquiries [Recent 3]</div>
+          </div>
+        </div>
+
+        <div class="box-body" style="margin-top: 10px">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Enquiry Date</th>
+                  <th scope="col">Recent Activity Date</th>
+                  <th scope="col">Assigned To</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="recentThreeEnquiries.length == 0">
+                  <td colspan="8" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                
+                <tr *ngFor="let enquiry of recentThreeEnquiries;let indexOfElements = index;">
+                  <th scope="row" class="center">{{indexOfElements + 1}}</th>
+                  <td>{{enquiry.customer.customerName}}</td>
+                  <td>{{enquiry.product.productName}}</td>
+                  <td>{{enquiry.enquiryType.enquiryType}}</td>
+                  <td>{{enquiry.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td>{{enquiry.recentActivityDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="enquiry.assignedTo == null">-</td>
+                  <td *ngIf="enquiry.assignedTo != null">{{enquiry.assignedTo.fullName}}</td>
+                  <td>{{enquiry.status}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  <!-- Recent 3 Enquiries Ends-->
+
+</section>

@@ -1,0 +1,15 @@
+a {
+  cursor: pointer;
+}
+
+.employeeNameTr {
+  background: #BFCAD1 !important;
+  padding: 5px !important;
+}
+
+@media print {
+  .noprint {
+     visibility: hidden;
+     display: none;
+  }
+}

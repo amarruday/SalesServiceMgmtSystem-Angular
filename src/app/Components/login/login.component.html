@@ -1,0 +1,99 @@
+<section class="loginContent login-page">
+    <div class="main-container">
+        
+        <div class="row">
+            <div class="col-sm-8">  
+                <div class="companyHeading">
+                    <div class="bold">WELCOME TO</div>
+                    <div style="margin: 20px 0px 15px 0px; font-size: 45px; font-family: Times New Roman, Times, serif;">YASH ELECTRICAL'S</div>
+                    <div style="text-align: -webkit-center;"><hr></div>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="bold" style="font-size: 20px;">SALES | SERVICE</div>
+                </div>
+            </div>
+    
+            <div class="col-sm-4">
+                <div class="login-box-body">
+                    
+                    <div>
+                        <p class="login-box-msg">Sign in to start your session</p>
+                
+                        <form name="loginForm" #loginForm="ngForm">
+                            <div class="form-group has-feedback">
+                                <input type="email" class="form-control" placeholder="Username" name="username" [(ngModel)]="loginBean.username" required #username="ngModel">
+                                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                <div *ngIf="username.invalid && (username.dirty || username.touched)">
+                                    <label class="error" for="username" *ngIf="username.errors?.['required']">Please enter username.</label>
+                                </div>
+                            </div>
+            
+                            <div class="form-group has-feedback">
+                                <input type="password" class="form-control" placeholder="Password" name="password" [(ngModel)]="loginBean.password" required #password="ngModel">
+                                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                <div *ngIf="password.invalid && (password.dirty || password.touched)">
+                                    <label class="error" for="password" *ngIf="password.errors?.['required']">Please enter password.</label>
+                                </div>
+                            </div>
+            
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <button type="submit" class="btn btn-primary btn-block btn-flat" [disabled]="loginForm.invalid" (click)="login()">Log In</button>
+                                </div>
+                            </div>
+                        </form>
+                        <br>                                        
+                      <a (click)="openForgotPasswordModal()">I forgot my password</a>
+                    </div>
+                    
+                  </div>     
+            </div>
+    
+        </div>
+
+    </div>
+</section>
+
+
+<!-- Forgot Password Starts-->
+<div class="modal fade" id="forgotPasswordModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Forgot Password</h4>
+            </div>
+            <div class="modal-body" >
+            
+                <div class="box-body">
+                    <div class="container-fluid">
+                        <form id="forgotPasswordForm" name="forgotPasswordForm" #forgotPasswordForm="ngForm">
+                            
+                            <div class="row">
+                                <div class="col-sm-12">  
+                                    <div class="form-group required">
+                                        <label class='control-label'>Username</label>
+                                        <input type="text" id="usernameForgotPassword" class="form-control" placeholder="Username" required [(ngModel)]="forgotPasswordBean.username" name="username" #username="ngModel">
+
+                                        <div *ngIf="username.invalid && (username.dirty || username.touched)">
+                                            <label class="error" for="username" *ngIf="username.errors?.['required']">Please enter username</label>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="forgotPasswordForm.invalid" (click)="forgotPassword()">Forgot</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- EmployeeWiseEnquiryReportModal End-->

@@ -1,0 +1,133 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Action Types</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addActionTypeModal">
+            Add
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+            <!-- <table class="table table-bordered"> -->
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Action Type</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!actionTypeList">
+                  <td colspan="4" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let actionType of actionTypeList; let indexOfelement=index;">
+                  <th scope="row">{{indexOfelement + 1}}</th>
+                  <td>{{actionType.actionType}}</td>
+                  <td *ngIf="actionType.status === 'Active'"><span class="badge bg-green">{{actionType.status}}</span></td>
+                  <td *ngIf="actionType.status === 'Inactive'"><span class="badge bg-red">{{actionType.status}}</span></td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-info" (click)="getActionType(actionType.actionTypeId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-sm btn-danger" (click)="deleteActionTypeById(actionType.actionTypeId)" style="margin: 0px 10px"><i class="fa fa-fw fa-trash"></i></button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+  <!-- Add Action Type Models Start -->
+  <div class="modal fade" id="addActionTypeModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add Action Type</h4>
+        </div>
+        <form name="addActionTypeForm" #addActionTypeForm="ngForm">
+          <div class="modal-body">
+          
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group required">
+                  <label class='control-label'>Action Type</label>
+                  <input type="text" id="actionTypeAddActionType" class="form-control" placeholder="Action Type"
+                    [(ngModel)]="addActionType.actionType" name="actionType" required #actionType="ngModel">
+
+                  <div *ngIf="actionType.invalid && (actionType.dirty || actionType.touched)">
+                    <label class="error" for="actionType" *ngIf="actionType.errors?.['required']">Please enter action type.</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" [disabled]="addActionTypeForm.invalid" (click)="addActionTypeFunction()">Save</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Add Action Tye Models End-->
+
+
+  <!-- Edit Action Type Models Start -->
+  <div class="modal fade" id="editActionTypeModal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Edit Action Type</h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <input type="hidden" id="actionTypeIdEditActionType" [(ngModel)]="updateActionTypeModel.actionTypeId" name="actionTypeId">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group required">
+                  <label class='control-label'>Action Type</label>
+                  <input type="text" id="actionTypeEditAction" class="form-control" placeholder="Action Type" [(ngModel)]="updateActionTypeModel.actionType" name="actionType" readonly="readonly">
+                </div>
+              </div>
+            </div>
+  
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group required">
+                  <label class='control-label'>Status</label>
+                  <select id="statusEditactionType" class="form-control" [(ngModel)]="updateActionTypeModel.status" name="status">
+                    <option value='Active'>Active</option>
+                    <option value='Inactive'>Inactive</option>
+                  </select>
+                </div>  
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" (click)="updateActionType()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Edit Action Tye Models End-->

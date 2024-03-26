@@ -1,0 +1,683 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Tickets</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" (click)="openAddTicketPopup()">Add Ticket</button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchTicketForm" name="searchTicketForm">
+              
+              <div class="row">
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="startDate" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="endDate" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Ticket Type</label>
+                    <select id="ticketTypeTicketSearch" class="form-control" [(ngModel)]="ticketSearchBean.ticketTypeId" name="ticketTypeId">
+                      <option value="0" selected>Select Ticket Type</option>
+                      <option *ngFor="let ticketType of searchTicketTypeList" [value]="ticketType.ticketTypeId">{{ticketType.ticketType}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Priority</label>
+                    <select id="prioritySearchTicket" class="form-control" [(ngModel)]="ticketSearchBean.priority" name="priority">
+                      <option value="All" selected>All</option>
+                      <option value="Low">Low</option>
+                      <option value="Medium">Medium</option>
+                      <option value="High">High</option>
+                    </select>
+                  </div>
+                </div>
+                
+              </div>
+
+              <div class="row">
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Status</label>
+                    <select id="ticketStatus" class="form-control" [(ngModel)]="ticketSearchBean.status" name="status">
+                      <option value="Unassigned" selected>Unassigned</option>
+                      <option value="All" selected>All</option>
+                      <option value="Assigned">Assigned</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Cancelled">Cancelled</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Customer</label>
+                    <select id="customerEnquirySearch" class="form-control" [(ngModel)]="ticketSearchBean.customerId" name="customerId">
+                      <option value="0" selected>Select Customer</option>
+                      <option *ngFor="let cust of customerList" [value]="cust.customerId">{{cust.customerName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">  
+                  <div class="form-group">
+                    <label>Added By</label>
+                    <select id="addedBySearch" class="form-control" [(ngModel)]="ticketSearchBean.addedBy" name="addedBy">
+                      <option value="0" selected>Select Added By</option>
+                      <option *ngFor="let user of addedByList" [value]="user.userId">{{user.fullName}}</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-3">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="searchTicketFunction();">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="box-body">
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Customer</th>
+                  <th scope="col">Product</th>
+                  <th scope="col">Ticket Type</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Added On</th>
+                  <th scope="col">Assigned To</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="text-align: center;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="ticketList.length == 0">
+                  <td colspan="11" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                
+                <tr *ngFor="let ticket of ticketList | paginate : {
+                                        itemsPerPage: 10,
+                                        currentPage: page,
+                                        totalItems: totalItems
+                                      };
+                            let indexOfElements = index;">
+
+                  <th scope="row" class="center">{{(page-1) * 10 + indexOfElements + 1}}</th>
+                  <td>{{ticket.longDescription}}</td>
+                  <td>{{ticket.customer.customerName}}</td>
+                  <td>{{ticket.product.productName}}</td>
+                  <td>{{ticket.ticketType.ticketType}}</td>
+                  <td>{{ticket.priority}}</td>
+                  <td>{{ticket.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="ticket.assignedTo == null">-</td>
+                  <td *ngIf="ticket.assignedTo != null">{{ticket.assignedTo.fullName}}</td>
+                  <td>{{ticket.status}}</td>
+                  
+                  <td style="text-align: center;" *ngIf="ticket.status === 'Cancelled' || ticket.status === 'Completed'">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getTicketDetails(ticket.ticketId);"><i class="fa fa-fw fa-eye"></i> View</button>
+                  </td>
+
+                  <td style="text-align: center;" *ngIf="ticket.status === 'Unassigned' || ticket.status === 'Assigned' || ticket.status === 'InProgress'">
+                    <button type="button" class="btn btn-sm btn-info" (click)="getTicketDetails(ticket.ticketId);"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            
+            <div class="paginationDiv">
+              <pagination-controls class="pagination my-pagination" (pageChange)="changePage($event)"
+                previousLabel="Prev" nextLabel="Next"></pagination-controls>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add Enquiry Models Start -->
+<div class="modal fade" id="addTicketModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add Ticket</h4>
+      </div>
+      <form id="addTicketForm" name="addTicketForm" #addTicketForm="ngForm">
+        <div class="modal-body">
+          <div class="row">
+            
+            <div class="col-sm-4">
+              
+              <div class="form-group required">
+                <label class='control-label'>Customer</label>
+                <select class="form-control" id="customerIdAddTicket" [(ngModel)]="addTicketBean.customerId" name="customerId" required nonZeroValue="0" #customerId="ngModel" (change)="getProductListByCustomer()">
+                  <option value='0' selected>Select Customer</option>
+                  <option *ngFor="let customer of activeCustomerList" [value]="customer.customerId">{{customer.customerName}}</option>
+                </select>
+
+                <div *ngIf="customerId.invalid && (customerId.dirty || customerId.touched)">
+                  <label class="error" for="customerId" *ngIf="customerId.errors?.['required']">Please Select Customer.</label>
+                  <label class="error" for="customerId" *ngIf="customerId.errors?.['nonZeroValue']">Please Select Customer.</label>
+                </div>
+              </div>
+
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group required">
+                <label class='control-label'>Ticket Type</label>
+                <select class="form-control" id="ticketTypeAddTicket" [(ngModel)]="addTicketBean.ticketTypeId" name="ticketTypeId" required nonZeroValue="0" #ticketTypeId="ngModel">
+                  <option value="0" selected>Select Ticket Type</option>
+                      <option *ngFor="let es of activeTicketTypeList" [value]="es.ticketTypeId">{{es.ticketType}}</option>
+                </select>
+
+                <div *ngIf="ticketTypeId.invalid && (ticketTypeId.dirty || ticketTypeId.touched)">
+                  <label class="error" for="ticketTypeId" *ngIf="ticketTypeId.errors?.['required']">Please Select ticket type.</label>
+                  <label class="error" for="ticketTypeId" *ngIf="ticketTypeId.errors?.['nonZeroValue']">Please Select ticket type.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group required">
+                <label class='control-label'>Priority</label>
+                <select class="form-control" id="customerIdAddTicket" [(ngModel)]="addTicketBean.priority" name="priority" required #priority="ngModel">
+                  <option value='Low' selected>Low</option>
+                  <option value='Medium'>Medium</option>
+                  <option value='High'>High</option>
+                </select>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Customer's Product</label>
+                <select class="form-control" id="customerProductAddTicket" [(ngModel)]="addTicketBean.customerProductLinkId" name="customerProductLinkId" required nonZeroValue="0" #customerProductLinkId="ngModel" (ngModelChange)="selectProduct($event);">
+                  <option value="0" selected>Select Customer Product</option>
+                  <option *ngFor="let cpl of customerProductLinkList" [value]="cpl.customerProductLinkId">{{cpl.product.productName}} [{{cpl.machineSerialNumber}}]</option>
+                </select>
+
+                <div *ngIf="customerProductLinkId.invalid && (customerProductLinkId.dirty || customerProductLinkId.touched)">
+                  <label class="error" for="customerProductLinkId" *ngIf="customerProductLinkId.errors?.['required']">Please Select customer product.</label>
+                  <label class="error" for="customerProductLinkId" *ngIf="customerProductLinkId.errors?.['nonZeroValue']">Please Select customer Product.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" id="productDates" style=" display: none;">
+            <div class="col-sm-4">
+              <div class="form-group required">
+                <label class='control-label'>Machine Serial Number</label>
+                <input type="text" id="machineSerialNumberAddTicket" [(ngModel)]="addTicketBean.machineSerialNumber" #machineSerialNumber="ngModel" class="form-control" name="machineSerialNumber" class="form-control" placeholder="Machine Serial Number" readonly="readonly">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group required">
+                <label class='control-label'>Purchase Date</label>
+                <input type="text" id="purchaseDateAddTicket" name="purchaseDate" class="form-control" placeholder="Purchase Date" readonly="readonly">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group required">
+                <label class='control-label'>Warranty Till</label>
+                <input type="text" id="warrantyTillAddTicket" [(ngModel)]="addTicketBean.warrantyTill" #warrantyTill="ngModel" name="warrantyTill" class="form-control" placeholder="Warranty Till" readonly="readonly">
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Short Description</label>
+                <input type="text" id="shortDescAddTicket" [(ngModel)]="addTicketBean.shortDescription" name="shortDescription" class="form-control" placeholder="Short Description" required #shortDescription="ngModel">
+
+                <div *ngIf="shortDescription.invalid && (shortDescription.dirty || shortDescription.touched)">
+                  <label class="error" for="shortDescription" *ngIf="shortDescription.errors?.['required']">Please enter short description</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label>Assign To</label>
+                <select class="form-control" id="assinToAddTicket" [(ngModel)]="addTicketBean.assignToId" name="assignToId" #assignToId="ngModel">
+                  <option value="0" selected>Assign To</option>
+                  <option *ngFor="let user of assignToList" [value]="user.userId">{{user.fullName}} [{{user.roleName}}]</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Long Description</label>
+                <textarea type="text" id="longDescAddTicket" [(ngModel)]="addTicketBean.longDescription" name="longDescription" rows="3" class="form-control" placeholder="Long Description" required #longDescription="ngModel"></textarea>
+
+                <div *ngIf="longDescription.invalid && (longDescription.dirty || longDescription.touched)">
+                  <label class="error" for="longDescription" *ngIf="longDescription.errors?.['required']">Please enter long description</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" [disabled]="addTicketForm.invalid" (click)="addNewTicketFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Visit Models End-->
+
+<!-- View Ticket Details Modal Starts -->
+<div class="modal fade" id="viewTicketDetailsModal" data-backdrop="" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Ticket Details</h4>
+      </div>
+      
+      <div class="modal-body">
+        <div *ngIf="ticketDetailsBean">
+          
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Ticket Type: </span>
+              <span>{{ticketDetailsBean.ticketType.ticketType}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Customer Name: </span>
+              <span>{{ticketDetailsBean.customer.customerName}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Priority: </span>
+              <span>{{ticketDetailsBean.priority}}</span>
+            </div>
+            
+          </div>
+
+          <div class="mtb"></div>
+          
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Product: </span>
+              <span>{{ticketDetailsBean.product.productName}}</span>
+            </div>
+
+            <div class="col-sm-4">
+              <span class="bold">Description: </span>
+              <span>{{ticketDetailsBean.longDescription}}</span>
+            </div>
+            
+            <div class="col-sm-4">
+              <span class="bold">Last Service Date: </span>
+              <span>{{ticketDetailsBean.lastServiceDate | date:"dd MMM yyyy"}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Added Date: </span>
+              <span>{{ticketDetailsBean.addedDate | date:"dd MMM yyyy"}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Recent Activity Date </span>
+              <span>{{ticketDetailsBean.recentActivityDate | date:"dd MMM yyyy"}}</span>
+            </div>
+            <div class="col-sm-4">
+              <span class="bold">Status: </span>
+              <span>{{ticketDetailsBean.status}}</span>
+            </div>
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <span class="bold">Added By: </span>
+              <span>{{ticketDetailsBean.addedBy.fullName}} <b>[{{ticketDetailsBean.addedBy.role.rolename}}]</b></span>
+            </div>
+            
+            <div class="col-sm-4">
+              <span class="bold">Assigned By: </span>
+              <span *ngIf="ticketDetailsBean.assignedBy != null && ticketDetailsBean.assignedBy != ''">{{ticketDetailsBean.assignedBy.fullName}}</span>
+              <span *ngIf="ticketDetailsBean.assignedBy == null || ticketDetailsBean.assignedBy == ''">-</span>
+            </div>
+
+            <div class="col-sm-4">
+              <span class="bold">Assigned To: </span>
+              <span *ngIf="ticketDetailsBean.assignedTo != null && ticketDetailsBean.assignedTo != ''">{{ticketDetailsBean.assignedTo.fullName}}</span>
+              <span *ngIf="ticketDetailsBean.assignedTo == null || ticketDetailsBean.assignedTo == ''">-</span>
+            </div>
+
+          </div>
+
+          <div class="mtb"></div>
+
+          <div class="mtb"></div>
+
+          <div class="row" style="float:right" *ngIf="ticketDetailsBean.status != 'Completed' && ticketDetailsBean.status != 'Cancelled'">
+            <div class="col-sm-12">
+              
+              <div class="btn-group">
+                <button type="button" class="btn btn-primary btn-flat">Actions</button>
+                <button type="button" class="btn btn-primary btn-flat dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <span class="caret"></span>
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu" role="menu" *ngIf="ticketDetailsBean.status === 'Unassigned'">
+                  <li><a class="action" (click)="openAssignTicketModal(ticketDetailsBean.ticketId)">Assign Ticket</a></li>
+                  <li><a class="action" (click)="openCancelTicketModal(ticketDetailsBean.ticketId)">Cancel Ticket</a></li>
+                </ul>
+                <ul class="dropdown-menu" role="menu" *ngIf="ticketDetailsBean.status === 'Assigned'">
+                  <li><a class="action" (click)="openChangeToInProgressModal(ticketDetailsBean.ticketId)">Change to In Progress</a></li>
+                  <li><a class="action" (click)="openCancelTicketModal(ticketDetailsBean.ticketId)">Cancel Ticket</a></li>
+                </ul>
+                <ul class="dropdown-menu" role="menu" *ngIf="ticketDetailsBean.status === 'InProgress'">
+                  <li><a class="action" (click)="openCompleteTicketModal(ticketDetailsBean.ticketId)">Complete Ticket</a></li>
+                  <li><a class="action" (click)="openCancelTicketModal(ticketDetailsBean.ticketId)">Cancel Ticket</a></li>
+                </ul>
+              </div>
+
+            </div>
+            
+          </div>
+
+        </div>
+
+        <div class="mtb"></div>
+
+        <section class="content">
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="timeline">
+                
+                <ul class="timeline" *ngFor="let ea of ticketActivityList; let i = index">
+                  
+                  <li class="time-label" *ngIf="ea.status === 'Assigned'"><span class="bg-assigned">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Unassigned'"><span class="bg-unassigned">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Cancelled'"><span class="bg-cancelled">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'InProgress'"><span class="bg-inprogress">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+                  <li class="time-label" *ngIf="ea.status === 'Completed'"><span class="bg-completed">{{ea.recordDate | date:"dd MMM yyyy"}}</span></li>
+
+                  <li *ngIf="ea.status === 'Unassigned'">
+                    <i class="fa fa-fw fa-circle bg-unassigned"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Assigned'">
+                    <i class="fa fa-fw fa-check-circle bg-assigned"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Cancelled'">
+                    <i class="fa fa-fw fa-times-circle bg-cancelled"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'InProgress'">
+                    <i class="fa fa-fw fa-hand-o-right bg-inprogress"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>
+
+                  <li *ngIf="ea.status === 'Completed'">
+                    <i class="fa fa-fw fa-thumbs-o-up bg-completed"></i>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header no-border"><a>{{ea.status}}</a> {{ea.remark}}</h3>
+                    </div>
+                  </li>  
+                  
+                </ul>
+    
+              </ul>
+        
+            </div>
+            
+          </div>
+        </section>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Ticket Details Modal Ends -->
+
+<!-- Assign Ticket Modal Start -->
+<div class="modal fade" id="assignTicketModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Assign Ticket</h4>
+      </div>
+      
+      <form name="assignTicketForm" #assignTicketForm="ngForm">
+        <input type="hidden" [(ngModel)]="assignTicketBean.ticketId" name="enquiryId" id="enquiryIdAssignEnquiry">
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Assign To</label>
+                
+                <select class="form-control" id="assignToAssignTicket" [(ngModel)]="assignTicketBean.assignToId" name="assignToId" required nonZeroValue="0" #assignToId="ngModel">
+                  <option value='0' selected>Select User</option>
+                  <option *ngFor="let user of assignToList" [value]="user.userId">{{user.fullName}}</option>
+                </select>
+
+                <div *ngIf="assignToId.invalid && (assignToId.dirty || assignToId.touched)">
+                  <label class="error" for="assignToId" *ngIf="assignToId.errors?.['required']">Please select employee.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                
+                <textarea class="form-control" id="remarkAssignTicket" placeholder="Remark" [(ngModel)]="assignTicketBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                  
+
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="assignTicketForm.invalid" (click)="changeTicketStatusFunction(assignTicketBean, 'assignTicketModal');">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Assign Enquiry Modal End -->
+
+<!-- Change to In Progress Ticket Modal Start -->
+<div class="modal fade" id="changeToInPrgressTicketModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Change to In Progress</h4>
+      </div>
+      
+      <form name="changeToInPrgressTicketForm" #changeToInPrgressTicketForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="changeToInProgress.ticketId" name="ticketId" id="changeToInPrgressTicketTicketId">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkChangeToInPrgressTicket" placeholder="Remark" [(ngModel)]="changeToInProgress.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="changeToInPrgressTicketForm.invalid" (click)="changeTicketStatusFunction(changeToInProgress, 'changeToInPrgressTicketModal')">Change to In Progress</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Change to In Progress Ticket Modal End -->
+
+<!-- Complete Ticket Modal Start -->
+<div class="modal fade" id="completeTicketModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Complete Ticket</h4>
+      </div>
+      
+      <form name="completeTicketForm" #completeTicketForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="completeTicketBean.ticketId" name="ticketId" id="completeTicketTicketId">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkCompleteTicket" placeholder="Remark" [(ngModel)]="completeTicketBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="completeTicketForm.invalid" (click)="changeTicketStatusFunction(completeTicketBean, 'completeTicketModal')">Complete</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Complete Ticket Modal End -->
+
+<!-- Cancel Ticket Modal Start -->
+<div class="modal fade" id="cancelTicketModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Cancel Ticket</h4>
+      </div>
+      
+      <form name="cancelTicketForm" #cancelTicketForm="ngForm">
+        
+        <div class="modal-body">
+          <input type="hidden" [(ngModel)]="cancelTicketBean.ticketId" name="ticketId" id="cancelTicketTicketId">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="form-group required">
+                <label class='control-label'>Remark</label>
+                <textarea class="form-control" id="remarkCancelTicket" placeholder="Remark" [(ngModel)]="cancelTicketBean.remark" name="remark" required #remark="ngModel" rows="3"></textarea>
+                <div *ngIf="remark.invalid && (remark.dirty || remark.touched)">
+                  <label class="error" for="remark" *ngIf="remark.errors?.['required']">Please enter remark.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="cancelTicketForm.invalid" (click)="changeTicketStatusFunction(cancelTicketBean, 'cancelTicketModal')">Cancel</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+<!-- Cancel Ticket Modal End -->

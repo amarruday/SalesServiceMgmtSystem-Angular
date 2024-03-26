@@ -1,0 +1,29 @@
+.small-box>.inner {
+  padding: 10px;
+  text-align: right;
+}
+
+.bg-purple {
+  background-color: #8775a7 !important;
+}
+
+.bg-blue {
+  background-color: #3598dc !important;
+}
+
+.small-box .icon {
+  transition: all .3s linear;
+  position: absolute;
+  top: -8px;
+  left: -35px;
+  z-index: 0;
+  font-size: 120px;
+  color: rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+@media (max-width: 767px) {
+  .inner {
+    text-align: center !important;
+  }
+}

@@ -1,0 +1,40 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Product Category</div>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Product Category</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!prodCatagoryList">
+                  <td colspan="3" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let productCatagory of prodCatagoryList; let indexOfelement=index;">
+                  <th scope="row" class="center">{{indexOfelement + 1}}</th>
+                  <td>{{productCatagory.productCatagoryName}}</td>
+                  <td *ngIf="productCatagory.productCatagoryStatus === true"><span class="badge bg-green">Active</span></td>
+                  <td *ngIf="productCatagory.productCatagoryStatus === false"><span class="badge bg-red">Inactive</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

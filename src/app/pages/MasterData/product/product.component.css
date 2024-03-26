@@ -1,0 +1,32 @@
+.my-pagination /deep/ .ngx-pagination .current {
+  background: #3c8dbc;
+}
+
+.pagination {
+  display: inline-block;
+  padding-left: 0;
+  margin: 5px 0;
+}
+
+.paginationDiv {
+  text-align: right;
+  font-size: 16px;
+}
+
+.active {
+  margin: 10px;
+  background-color: #00950c;
+  padding: 5px 15px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 500;
+}
+
+.inactive {
+  margin: 10px;
+  background-color: #b9b7c0;
+  padding: 5px 15px;
+  border-radius: 10px;
+  color: #000;
+}
+	 

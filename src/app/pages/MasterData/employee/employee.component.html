@@ -1,0 +1,395 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5%;">Manage Employees</div>
+          </div>
+          <div style="float: right;">
+            <button type="button" class="btn btn-primary" (click)="openAddCustomerModal()">
+              Add
+            </button>
+          </div>
+        </div>
+        
+        <div class="box-body">
+          <div class="table-responsive">
+              <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th scope="col" class="center">#</th>
+                  <th scope="col">Employee Name</th>
+                  <th scope="col">Department</th>
+                  <th scope="col">Role</th>
+                  <th scope="col">Manager</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" style="text-align: center; width: 16%">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="!usersList">
+                  <td colspan="7" style="color: red; text-align: center;"><span>No records found!</span></td>
+                </tr>
+                <tr *ngFor="let user of usersList; let indexOfelement=index;">
+                  <th scope="row" class="center">{{indexOfelement + 1}}</th>
+                  <td>{{user.fullName}}</td>
+                  <td>{{user.department.departmentName}}</td>
+                  <td>{{user.role.rolename}}</td>
+                  <td *ngIf="user.manager != null">{{user.manager.fullName}}</td>
+                  <td *ngIf="user.manager == null || user.manager == ''">-</td>
+                  <td *ngIf="user.status === true"><span class="badge bg-green">Active</span></td>
+                  <td *ngIf="user.status === false"><span class="badge bg-red">Inactive</span></td>
+                  <td *ngIf="(user.role.rolename) === 'ADMIN'" style="text-align: center;">
+                    <button type="button" class="btn btn-sm btn-primary" style="margin: 0px 10px" (click)="viewCustomerDetails(user.userId)"><i class="fa fa-fw fa-eye"></i> View</button>
+                  </td>
+                  <td *ngIf="(user.role.rolename) != 'ADMIN'" style="text-align: center;">
+                    <button type="button" class="btn btn-sm btn-info" (click)="editCustomerById(user.userId)"><i class="fa fa-fw fa-edit"></i> Edit</button>
+                    <button type="button" class="btn btn-sm btn-primary" style="margin: 0px 10px" (click)="viewCustomerDetails(user.userId)"><i class="fa fa-fw fa-eye"></i> View</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- View Customer Details Models Start -->
+<div class="modal fade" id="viewEmployeeModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">View Employee</h4>
+      </div>
+
+      <div class="modal-body" *ngIf="userDetails">
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Employee Name: </span>
+            <span>{{userDetails.fullName}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Employee Code: </span>
+            <span>{{userDetails.employeeCode}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+        
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Email: </span>
+            <span>{{userDetails.email}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Mobile Number: </span>
+            <span>{{userDetails.mobileNumber}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">System Username: </span>
+            <span>{{userDetails.username}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Joining Date: </span>
+            <span>{{userDetails.joiningDate}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+
+        <div class="row">
+          <div class="col-sm-6">
+            <span class="bold">Department: </span>
+            <span>{{userDetails.department.departmentName}}</span>
+          </div>
+          <div class="col-sm-6">
+            <span class="bold">Role: </span>
+            <span>{{userDetails.roleName}}</span>
+          </div>
+        </div>
+
+        <div class="mtb"></div>
+
+        <div class="row">
+          
+          <div class="col-sm-6" *ngIf="(userDetails.managerName != null)">
+            <span class="bold">Reporting To: </span>
+            <span>{{userDetails.managerName}}</span>
+          </div>
+
+          <div class="col-sm-6" *ngIf="(userDetails.productCatagoryName != null)">
+            <span class="bold">Product Catagory: </span>
+            <span>{{userDetails.productCatagoryName}}</span>
+          </div>
+        </div>
+
+      </div>
+        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- View Customer Models End-->
+
+<!-- Add Customer Models Start -->
+<div class="modal fade" id="addUserModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Add New User</h4>
+      </div>
+      <form name="addUserForm" #addUserForm="ngForm">
+        <div class="modal-body">
+        
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>User Name</label>
+                <input type="text" id="fullNameAddUser" class="form-control" placeholder="Full Name"
+                  [(ngModel)]="addUserModal.fullName" name="fullName" required #fullName="ngModel">
+
+                <div *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)">
+                  <label class="error" for="fullName" *ngIf="fullName.errors?.['required']">Please enter user name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Employee Code</label>
+                <input type="text" id="empCodeAddUser" class="form-control" placeholder="Employee Code"
+                  [(ngModel)]="addUserModal.employeeCode" name="employeeCode" required #employeeCode="ngModel">
+
+                <div *ngIf="employeeCode.invalid && (employeeCode.dirty || employeeCode.touched)">
+                  <label class="error" for="employeeCode" *ngIf="employeeCode.errors?.['required']">Please enter employee code.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Email</label>
+                <input type="text" id="emailAddUser" class="form-control" placeholder="Email"
+                  [(ngModel)]="addUserModal.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required #email="ngModel">
+
+                <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                  <label class="error" for="email" *ngIf="email.errors?.['required']">Please enter email.</label>
+                  <label class="error" for="email" *ngIf="email.errors?.['pattern']">Please enter valid email.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Mobile Number</label>
+                <input type="text" id="mobileNumberAddUser" class="form-control" placeholder="Mobile Number"
+                  [(ngModel)]="addUserModal.mobileNumber" name="mobileNumber" minlength="10" maxlength="10" pattern="^[0-9]*$" required #mobileNumber="ngModel">
+
+                <div *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['required']">Please enter mobile number</label>
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['minlength'] || mobileNumber.errors?.['maxlength'] || mobileNumber.errors?.['pattern']">Please enter valid mobile number.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Role</label>
+                <select class='form-control' name="roleId" id="roleAddUser" [(ngModel)]="addUserModal.roleId" nonZeroValue="0" #roleId="ngModel" (ngModelChange)="getSettingsByRole($event)">
+                  <option value="0" selected>Select Role</option>
+                  <option *ngFor="let role of roleList" [value]="role.roleId">{{role.rolename}}</option>
+                </select>
+
+                <div *ngIf="roleId.invalid && (roleId.dirty || roleId.touched)">
+                  <label class="error" for="roleId" *ngIf="roleId.errors?.['nonZeroValue']">Please select Role.</label>
+                </div>
+              </div>
+            </div>
+        
+            <div class="col-sm-6" id="productCatagoryListDiv" style="display: none;">
+              <div class="form-group required">
+                <label class='control-label'>Product Catagory</label>
+                <select class='form-control' id="productCatagorySelect" name="productCatagoryId" [(ngModel)]="addUserModal.productCatagoryId">
+                  <option value="0" selected>Select Product Catagory</option>
+                  <option *ngFor="let pc of productCatagoryList" [value]="pc.productCatagoryId">{{pc.productCatagoryName}}</option>
+                </select>
+                <label class="error" for="productCatagoryId" id="productCatagoryError"></label>
+              </div>
+            </div>
+
+            <div class="col-sm-6" id="managerListListDiv" style="display: none;">
+              <div class="form-group required">
+                <label class='control-label'>Manager</label>
+                <select class='form-control' id="managerSelect" name="managerId" [(ngModel)]="addUserModal.managerId">
+                  <option value="0" selected>Select Manager</option>
+                  <option *ngFor="let mgr of managerList" [value]="mgr.managerId">{{mgr.manager_productCatagory}}</option>
+                </select>
+                <label class="error" for="managerId" id="managerIdError"></label>
+              </div>
+            </div>
+
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="addUserForm.invalid" (click)="addNewUserFunction()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Add Customer Models End-->
+
+<!-- Edit Customer Models Start -->
+<div class="modal fade" id="editUserModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Edit User</h4>
+      </div>
+      <form name="editUserForm" #editUserForm="ngForm">
+        <div class="modal-body">
+          <input type="hidden" name="userId" [(ngModel)]="editUserModal.userId">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Name</label>
+                <input type="text" id="fullNameAddEdit" class="form-control" placeholder="Full Name"
+                  [(ngModel)]="editUserModal.fullName" name="fullName" required #fullName="ngModel">
+
+                <div *ngIf="fullName.invalid && (fullName.dirty || fullName.touched)">
+                  <label class="error" for="fullName" *ngIf="fullName.errors?.['required']">Please enter user name.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Employee Code</label>
+                <input type="text" id="empCodeEditUser" class="form-control" placeholder="Employee Code"
+                  [(ngModel)]="editUserModal.employeeCode" name="employeeCode" required #employeeCode="ngModel">
+
+                <div *ngIf="employeeCode.invalid && (employeeCode.dirty || employeeCode.touched)">
+                  <label class="error" for="employeeCode" *ngIf="employeeCode.errors?.['required']">Please enter employee code.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Email</label>
+                <input type="text" id="emailEditUser" class="form-control" placeholder="Email"
+                  [(ngModel)]="editUserModal.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required #email="ngModel">
+
+                <div *ngIf="email.invalid && (email.dirty || email.touched)">
+                  <label class="error" for="email" *ngIf="email.errors?.['required']">Please enter email.</label>
+                  <label class="error" for="email" *ngIf="email.errors?.['pattern']">Please enter valid email.</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Mobile Number</label>
+                <input type="text" id="mobileNumberEditUser" class="form-control" placeholder="Mobile Number"
+                  [(ngModel)]="editUserModal.mobileNumber" name="mobileNumber" minlength="10" maxlength="10" pattern="^[0-9]*$" required #mobileNumber="ngModel">
+
+                <div *ngIf="mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched)">
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['required']">Please enter mobile number</label>
+                  <label class="error" for="mobileNumber" *ngIf="mobileNumber.errors?.['minlength'] || mobileNumber.errors?.['maxlength'] || mobileNumber.errors?.['pattern']">Please enter valid mobile number.</label>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Role</label>
+                <select class='form-control' name="roleId" id="roleAddUser" 
+                [(ngModel)]="editUserModal.roleId" nonZeroValue="0" #roleId="ngModel" (ngModelChange)="getSettingsByRoleForEditUser($event)">
+                  <option value="0" selected>Select Role</option>
+                  <option *ngFor="let role of roleList" [value]="role.roleId">{{role.rolename}}</option>
+                </select>
+
+                <div *ngIf="roleId.invalid && (roleId.dirty || roleId.touched)">
+                  <label class="error" for="roleId" *ngIf="roleId.errors?.['nonZeroValue']">Please select Role.</label>
+                </div>
+              </div>
+            </div>
+        
+            <div class="col-sm-6" id="productCatagoryListEditDiv" style="display: none;">
+              <div class="form-group required">
+                <label class='control-label'>Product Catagory</label>
+                <select class='form-control' id="productCatagorySelectEditUser" name="productCatagoryId" [(ngModel)]="editUserModal.productCatagoryId">
+                  <option value="0" selected>Select Product Catagory</option>
+                  <option *ngFor="let pc of productCatagoryList" [value]="pc.productCatagoryId">{{pc.productCatagoryName}}</option>
+                </select>
+                <label class="error" for="productCatagoryId" id="productCatagoryEditUserError"></label>
+              </div>
+            </div>
+
+            <div class="col-sm-6" id="managerListListEditDiv" style="display: none;">
+              <div class="form-group required">
+                <label class='control-label'>Manager</label>
+                <select class='form-control' id="managerSelectEditUser" name="managerId" [(ngModel)]="editUserModal.managerId">
+                  <option value="0" selected>Select Manager</option>
+                  <option *ngFor="let mgr of managerList" [value]="mgr.managerId">{{mgr.manager_productCatagory}}</option>
+                </select>
+                <label class="error" for="managerId" id="managerIdEditUserError"></label>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group required">
+                <label class='control-label'>Status</label>
+                <select id="statusEditUser" class="form-control" [(ngModel)]="editUserModal.status" name="status">
+                  <option value='true'>Active</option>
+                  <option value='false'>Inactive</option>
+                </select>
+              </div>  
+            </div>
+          </div>
+        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" [disabled]="editUserForm.invalid" (click)="updateUser()">Save</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Edit Customer Models End-->

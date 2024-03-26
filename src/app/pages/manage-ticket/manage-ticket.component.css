@@ -1,0 +1,33 @@
+.bg-unassigned {
+  background-color: #464e4a !important;
+  color: #fff !important;
+}
+
+.bg-assigned {
+  background-color: #00ACC2 !important;
+  color: #fff !important;
+}
+
+.bg-cancelled {
+  background-color: #E64A19 !important;
+  color: #fff !important;
+}
+
+.bg-inprogress {
+  background-color: #ff9e00 !important;
+  color: #fff !important;
+}
+
+.bg-completed {
+  background-color: #1BBC9B !important;
+  color: #fff !important;
+}
+
+.bg-lost {
+  background-color: #E64A19 !important;
+  color: #fff !important;
+}
+
+.action {
+  cursor: pointer;
+}

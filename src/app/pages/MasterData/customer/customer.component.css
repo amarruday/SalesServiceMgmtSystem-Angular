@@ -1,0 +1,15 @@
+.customer {
+  margin: 10px;
+  background-color: #ffc300;
+  padding: 5px 10px;
+  border-radius: 10px;
+}
+
+.prospect {
+  margin: 10px;
+  background-color: #9a85e5;
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: white;
+}
+	  

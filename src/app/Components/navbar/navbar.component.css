@@ -1,0 +1,12 @@
+li>a {
+  cursor: pointer;
+}
+
+.sidebar-menu li.header {
+  padding: 5px 25px 5px 7px;
+  font-size: 14px;
+}
+
+.sidebar-menu li.header hover {
+  color: #fff;
+}

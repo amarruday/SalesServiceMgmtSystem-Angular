@@ -1,0 +1,31 @@
+/* You can add global styles to this file, and also import other style files */
+.form-group.required .control-label:after { 
+  content:"*";
+  color:red;
+}
+
+.bold {
+  font-weight:bold;
+}
+
+.mtb {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.swal2-popup {
+  font-size: 1.6rem !important;
+}
+
+.error {
+  color: red;
+  font-weight: 500;
+}
+
+.center {
+  text-align:center
+}
+
+thead {
+  background-color: #d8d8d8;
+}

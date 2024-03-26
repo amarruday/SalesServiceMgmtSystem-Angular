@@ -1,0 +1,857 @@
+<section class="content">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        
+        <div class="box-header" style="background-color: #02c55a; color: white;">
+          <div class="box-title">
+            <div style="font-weight: bold; margin-top: 5px;">Reports</div>
+          </div>
+        </div>
+        
+        <div class="box-body" style="background: #d2d6de;">
+          <div class="col-sm-12" style="margin-top:15px;">
+            <!-- Custom Tabs -->
+            <div class="nav-tabs-custom">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="false">Ticket Reports</a></li>
+                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="true">Enquiry Reports</a></li>
+                <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="true">Charts</a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="tab_1">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="center" style="width:10%">#</th>
+                        <th scope="col">Report</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="center">1</th>
+                        <td><a (click)="openTicketTypeWiseTicketReportModal()">Ticket Type-wise Ticket Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">2</th>
+                        <td><a (click)="openProductWiseTicketReportModal()">Product-wise Ticket Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">3</th>
+                        <td><a (click)="openEmployeeWiseTicketReportModal()">Employee-wise Ticket Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">4</th>
+                        <td><a (click)="openProductWiseTicketTypeCountReportModal()">Product-wise Ticket Type Report</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="tab-pane" id="tab_2">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="center" style="width:10%">#</th>
+                        <th scope="col">Report</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="center">1</th>
+                        <td><a (click)="openEnquirySourceEfficacyWiseEnquiryReportModal()">Enquiry Source Efficacy Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">2</th>
+                        <td><a (click)="openProductWiseEnquiryReportModal()">Product-wise Enquiry Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">3</th>
+                        <td><a (click)="openEmployeeWiseEnquiryReportModal()">Employee-wise Enquiry Report</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="tab-pane" id="tab_3">
+                  <table class="table table-bordered table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col" class="center" style="width:10%">#</th>
+                        <th scope="col">Report</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row" class="center">1</th>
+                        <td><a (click)="openProductTypeWiseEnquiryReportModal()">Product Type-wise Enquiry Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">2</th>
+                        <td><a (click)="openProductTypeWiseTicketReportModal()">Product Type-wise Ticket Report</a></td>
+                      </tr>
+                      <tr>
+                        <th scope="row" class="center">3</th>
+                        <td><a (click)="openTicketTypeWiseTicketChartReportModal()">Ticket Type-wise Ticket Report</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+              </div>
+              
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Ticket Reports-->
+<!-- TicketTypeWiseTicketReportModal Starts-->
+<div class="modal fade" id="ticketTypeWiseTicketReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Ticket Type Wise Ticket Report</h4>
+      </div>
+      <div class="modal-body" id="ticketTypeWiseTicketReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Ticket Type Wise Ticket Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchTicketTypeWiseTicketReportForm" name="searchTicketTypeWiseTicketReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s1" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e1" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getTicketTypeWiseTicketReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col">Unassigned</th>
+                <th scope="col">Assigned</th>
+                <th scope="col">InProgress</th>
+                <th scope="col">Completed</th>
+                <th scope="col">Cancelled</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr *ngIf="(ticketTypeWiseTicketReport | json) == '{}'">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of ticketTypeWiseTicketReport | keyvalue">
+                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="6" class="employeeNameTr bold">Ticket Type: {{item.key}}</td>
+                </tr>
+                <tr>
+                  <td *ngIf="item.value['Unassigned'] < 1 || item.value['Unassigned'] == null || item.value['Unassigned'] === undefined">0</td>
+                  <td *ngIf="item.value['Unassigned'] > 0">{{item.value['Unassigned']}}</td>
+
+                  <td *ngIf="item.value['Assigned'] < 1 || item.value['Assigned'] == null || item.value['Assigned'] === undefined">0</td>
+                  <td *ngIf="item.value['Assigned'] > 0">{{item.value['Assigned']}}</td>
+
+                  <td *ngIf="item.value['InProgress'] < 1 || item.value['InProgress'] == null || item.value['InProgress'] === undefined">0</td>
+                  <td *ngIf="item.value['InProgress'] > 0">{{item.value['InProgress']}}</td>
+
+                  <td *ngIf="item.value['Completed'] < 1 || item.value['Completed'] == null || item.value['Completed'] === undefined">0</td>
+                  <td *ngIf="item.value['Completed'] > 0">{{item.value['Completed']}}</td>
+                  
+                  <td *ngIf="item.value['Cancelled'] < 1 || item.value['Cancelled'] == null || item.value['Cancelled'] === undefined">0</td>
+                  <td *ngIf="item.value['Cancelled'] > 0">{{item.value['Cancelled']}}</td>
+
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="ticketTypeWiseTicketReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductWiseTicketReportModal End-->
+
+<!-- ProductWiseTicketReportModal Starts-->
+<div class="modal fade" id="productWiseTicketReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Product Wise Ticket Report</h4>
+      </div>
+      <div class="modal-body" id="productWiseTicketReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Product Wise Ticket Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchProductWiseTicketReportForm" name="searchProductWiseTicketReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s2" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e2" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getProductwiseTicketReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Product</th>
+                <th scope="col">Ticket Date</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(productWiseTicketReport | json) == '{}'">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of productWiseTicketReport | keyvalue">
+                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="6" class="employeeNameTr bold">Product: {{item.key}}</td>
+                </tr>
+                <tr *ngFor="let value of item.value; let indexOfelement=index">
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{value.customer.customerName}}</td>
+                  <td>{{value.product.productName}}</td>
+                  <td>{{value.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="value.assignedTo === null || value.assignedTo === undefined">-</td>
+                  <td *ngIf="value.assignedTo != null || value.assignedTo != undefined">{{value.assignedTo.fullName}}</td>
+                  <td>{{value.status}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="productWiseTicketReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductWiseTicketReportModal End-->
+
+<!-- EmployeeWiseTicketReportModal Starts-->
+<div class="modal fade" id="employeeWiseTicketReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Employee Wise Ticket Report</h4>
+      </div>
+      <div class="modal-body" id="employeeWiseTicketReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Employee Wise Ticket Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchEmployeeWiseTicketReportForm" name="searchEmployeeWiseTicketReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s3" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e3" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getEmployeewiseTicketReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Product</th>
+                <th scope="col">Ticket Date</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(employeeWiseTicketReport | json) == '{}'">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of employeeWiseTicketReport | keyvalue">
+                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="6" class="employeeNameTr bold">{{item.key}}</td>
+                </tr>
+                <tr *ngFor="let value of item.value; let indexOfelement=index">
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{value.customer.customerName}}</td>
+                  <td>{{value.product.productName}}</td>
+                  <td>{{value.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="value.assignedTo === null || value.assignedTo === undefined">-</td>
+                  <td *ngIf="value.assignedTo != null || value.assignedTo != undefined">{{value.assignedTo.fullName}}</td>
+                  <td>{{value.status}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="employeeWiseTicketReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- EmployeeWiseTicketReportModal End-->
+
+<!-- ProductWiseTicketTypeReportModal Starts-->
+<div class="modal fade" id="productWiseTicketTypeCountReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Product Wise Ticket Type - Ticket Count Report</h4>
+      </div>
+      <div class="modal-body" id="productWiseTicketTypeCountReportModalPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Product Wise Ticket Type - Ticket Count Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="productWiseTicketTypeCountReportModalForm" name="productWiseTicketTypeCountReportModalForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s7" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e7" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getProductWiseTicketTypeCountReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Ticket Type</th>
+                <th scope="col">No.Of Tickets</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(productWiseTicketTypeCountReport | json) == '{}'">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of productWiseTicketTypeCountReport | keyvalue">
+                <tr><td colspan="3">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="3" class="employeeNameTr bold">Product: {{item.key}} </td>
+                </tr>
+                <tr *ngFor="let value of item.value | keyvalue; let indexOfelement=index">
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{value.key}}</td>
+                  <td>{{value.value}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductWiseTicketReportModal End-->
+
+<!-- Enquiry Reports-->
+<!-- EnquirySourceEfficacyEnquiryReportModal Starts-->
+<div class="modal fade" id="enquirySourceEfficacyEnquiryReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Enquiry Source Efficacy Wise Enquiry Report</h4>
+      </div>
+      <div class="modal-body" id="enquirySourceEfficacyEnquiryReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Enquiry Source Efficacy Wise Enquiry Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchEnquirySourceEfficacyEnquiryReportForm" name="searchEnquirySourceEfficacyEnquiryReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s4" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e4" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getEnquirySourceEfficacyWiseEnquiryReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Enquiry Source</th>
+                <th scope="col">Count of Enquiry's</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(enquirySourceEfficacyWiseEnquiryReport | json) == '{}'">
+                <td colspan="3" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of enquirySourceEfficacyWiseEnquiryReport | keyvalue; let indexOfelement=index">
+                <tr>
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{item.key}}</td>
+                  <td>{{item.value}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="enquirySourceEfficacyEnquiryReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductWiseEnquiryReportModal End-->
+
+
+<!-- ProductWiseEnquiryReportModal Starts-->
+<div class="modal fade" id="productWiseEnquiryReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Product Wise Enquiry Report</h4>
+      </div>
+      <div class="modal-body" id="productWiseEnquiryReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Product Wise Enquiry Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchProductWiseEnquiryReportForm" name="searchProductWiseEnquiryReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s5" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e5" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getProductWiseEnquiryReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Product</th>
+                <th scope="col">Enquiry Date</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="(productWiseEnquiryReport | json) == '{}'">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of productWiseEnquiryReport | keyvalue">
+                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="6" class="employeeNameTr bold">Product: {{item.key}}</td>
+                </tr>
+                <tr *ngFor="let value of item.value; let indexOfelement=index">
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{value.customer.customerName}}</td>
+                  <td>{{value.product.productName}}</td>
+                  <td>{{value.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="value.assignedTo === null || value.assignedTo === undefined">-</td>
+                  <td *ngIf="value.assignedTo != null || value.assignedTo != undefined">{{value.assignedTo.fullName}}</td>
+                  <td>{{value.status}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="productWiseEnquiryReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductWiseEnquiryReportModal End-->
+
+<!-- EmployeeWiseEnquiryReportModal Starts-->
+<div class="modal fade" id="employeeWiseEnquiryReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="width: 70%">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Employee Wise Enquiry Report</h4>
+      </div>
+      <div class="modal-body" id="employeeWiseEnquiryReportPrint">
+        <div class="text-center mtb bold" style="font-size:24px;">Employee Wise Enquiry Report</div>
+
+        <div class="box-body">
+          <div class="container-fluid">
+            <form id="searchEmployeeWiseEnquiryReportForm" name="searchEmployeeWiseEnquiryReportForm">
+              
+              <div class="row">
+                <div class="col-sm-4">  
+                  <div class="form-group">
+                    <label>Start Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="s6" name="startDate" placeholder="Start Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label>End Date</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                      <input type="text" class="form-control pull-right" id="e6" name="endDate" placeholder="End Date" readonly="readonly">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-4 noprint">
+                  <div style="margin-top: 25px;">
+                    <button type="button" class="btn btn-primary" (click)="getEmployeeWiseEnquiryReport()">
+                      <i class="fa fa-fw fa-search"></i> Search
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+            </form>
+          </div>
+        </div>
+
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th scope="col" class="center">#</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Product</th>
+                <th scope="col">Enquiry Date</th>
+                <th scope="col">Assigned To</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="employeeWiseEnquiryReport == null">
+                <td colspan="6" style="color: red; text-align: center;"><span>No records found!</span></td>
+              </tr>
+              <ng-container *ngFor = "let item of employeeWiseEnquiryReport | keyvalue">
+                <tr><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                  <td colspan="6" class="employeeNameTr bold">{{item.key}}</td>
+                </tr>
+                <tr *ngFor="let value of item.value; let indexOfelement=index">
+                  <td>{{indexOfelement + 1}}</td>
+                  <td>{{value.customer.customerName}}</td>
+                  <td>{{value.product.productName}}</td>
+                  <td>{{value.addedDate | date:"dd MMM yyyy"}}</td>
+                  <td *ngIf="value.assignedTo === null || value.assignedTo === undefined">-</td>
+                  <td *ngIf="value.assignedTo != null || value.assignedTo != undefined">{{value.assignedTo.fullName}}</td>
+                  <td>{{value.status}}</td>
+                </tr>
+              </ng-container>
+             
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" printSectionId="employeeWiseEnquiryReportPrint" [useExistingCss]="true" ngxPrint>Print</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- EmployeeWiseEnquiryReportModal End-->
+
+<!-- Chart Reports-->
+<!-- ProductTypeWiseEnquiryReportModal Starts-->
+<div class="modal fade" id="productTypeWiseEnquiryReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Product TypeWise Enquiry Report (For {{monthName}} Month)</h4>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center">
+          <apx-chart class="myApexChart"
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [title]="chartOptions.title"
+            [labels]="chartOptions.labels"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductTypeWiseEnquiryReportModal End-->
+
+<!-- ProductTypeWiseTicketReportModal Starts-->
+<div class="modal fade" id="productTypeWiseTicketReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Product TypeWise Ticket Report (For {{monthName}} Month)</h4>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center">
+          <apx-chart class="myApexChart"
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [title]="chartOptions.title"
+            [labels]="chartOptions.labels"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ProductTypeWiseTicketReportModal End-->
+
+<!-- TicketTypeWiseTicketReportModal Starts-->
+<div class="modal fade" id="ticketTypeWiseTicketChartReportModal" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Ticket TypeWise Ticket Report (For {{monthName}} Month)</h4>
+      </div>
+      <div class="modal-body">
+        <div style="text-align:center">
+          <apx-chart class="myApexChart"
+            [series]="chartOptions.series"
+            [chart]="chartOptions.chart"
+            [title]="chartOptions.title"
+            [labels]="chartOptions.labels"
+          ></apx-chart>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- TicketTypeWiseTicketReportModal End-->
